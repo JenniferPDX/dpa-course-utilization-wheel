@@ -1,5 +1,5 @@
 # dpa-student-class-wheel
-Shows counts of students who have taken a given class in a give specialty.
+Shows counts of students who have taken a given class in a given specialty.
 
 Really wanted to be able to size my arcs... while having my cake and eating it too (displaying text, zoomable).
 
