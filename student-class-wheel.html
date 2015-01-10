@@ -102,7 +102,7 @@ function init_code_hierarchy_plot(element_id,data)
     {
         var name = data[0];
         var total = data[1];
-        var children = data[3];
+        var children = data[children_index];
         var current_deg = start_deg;
 		var parent = '';
 
@@ -143,10 +143,10 @@ function init_code_hierarchy_plot(element_id,data)
     var thickness = width/2.0/(max_level+2)*1.1;
         
     var arc = d3.svg.arc()
-    .startAngle(function(d) { if(d[3]==0){return d[0];}return d[0]+0.01; })
-    .endAngle(function(d) { if(d[3]==0){return d[1];}return d[1]-0.01; })
-    .innerRadius(function(d) { return 1.1*d[3]*thickness; })
-    .outerRadius(function(d) { return (1.1*d[3]+1)*thickness; });    
+    .startAngle(function(d) { if(d[children_index]==0){return d[0];}return d[0]+0.01; })
+    .endAngle(function(d) { if(d[children_index]==0){return d[1];}return d[1]-0.01; })
+    .innerRadius(function(d) { return 1.1*d[children_index]*thickness; })
+    .outerRadius(function(d) { return (1.1*d[children_index]+1)*thickness; });    
     
     var slices = svg.selectAll(".form-container")
         .data(function(d) { return data_slices; })
@@ -211,11 +211,11 @@ function init_code_hierarchy_plot(element_id,data)
     {
         if (ref)
         {
-            return d[3]-ref[3];
+            return d[children_index]-ref[children_index];
         }
         else
         {
-            return d[3];
+            return d[children_index];
         }
     }
     
@@ -268,7 +268,7 @@ function init_code_hierarchy_plot(element_id,data)
             .filter(
                 function (b)
                 {
-                    if (b[0] >= last_ref[0] && b[1] <= last_ref[1]  && b[3] >= last_ref[3])
+                    if (b[0] >= last_ref[0] && b[1] <= last_ref[1]  && b[children_index] >= last_ref[children_index])
                     {
                         return true;
                     }
@@ -284,7 +284,7 @@ function init_code_hierarchy_plot(element_id,data)
             .filter(
                 function (b)
                 {
-                    if (b[0] < d[0] || b[1] > d[1] || b[3] < d[3])
+                    if (b[0] < d[0] || b[1] > d[1] || b[children_index] < d[children_index])
                     {
                         return true;
                     }
@@ -297,7 +297,7 @@ function init_code_hierarchy_plot(element_id,data)
         .filter(
             function (b)
             {
-                if (b[0] >= new_ref[0] && b[1] <= new_ref[1] && b[3] >= new_ref[3])
+                if (b[0] >= new_ref[0] && b[1] <= new_ref[1] && b[children_index] >= new_ref[children_index])
                 {
                     return true;
                 }
@@ -310,7 +310,7 @@ function init_code_hierarchy_plot(element_id,data)
         .filter(
             function (b)
             {
-                return b[0] >= new_ref[0] && b[1] <= new_ref[1] && b[3] >= new_ref[3];
+                return b[0] >= new_ref[0] && b[1] <= new_ref[1] && b[children_index] >= new_ref[3];
             }
         ).transition().duration(1000)
          .attr("transform", function(b) {
@@ -334,9 +334,10 @@ function init_code_hierarchy_plot(element_id,data)
     };  
 
 }
+
 code_hierarchy_data = [
     "MPA", 
-    200000, 
+    212800, 
     11601, 
     {
         "Natural Res": [
@@ -348,269 +349,381 @@ code_hierarchy_data = [
         ], 
         "Global Leader": [
             "Global Leader", 
-            39000, 
+            56800, 
             6, 
             {
-                "MPA Core": [
-                    "MPA Core", 
-                    7800, 
-                    374, 
+                "Core": [
+                    "(GL) Core",
+                    28200,
+                    374,
                     {
-                        "PA 511": [
-                            "PA 511", 
-                            770, 
-                            270, 
-                            {}
+                        "MPA Core": [
+                            "MPA Core", 
+                            24000, 
+                            374, 
+                            {
+                                "PA 511": [
+                                    "PA 511 (10)", 
+                                    2400, 
+                                    270, 
+                                    {}
+                                ], 
+                                "PA 513": [
+                                    "PA 513 (10)", 
+                                    2400, 
+                                    17, 
+                                    {}
+                                ], 
+                                "PA 533": [
+                                    "PA 533 (10)", 
+                                    2400, 
+                                    270, 
+                                    {}
+                                ], 
+                                "PA 534": [
+                                    "PA 534 (10)", 
+                                    2400, 
+                                    17, 
+                                    {}
+                                ], 
+                                "PA 540": [
+                                    "PA 540 (10)", 
+                                    2400, 
+                                    270, 
+                                    {}
+                                ], 
+                                "PA 551": [
+                                    "PA 551 (10)", 
+                                    2400, 
+                                    17, 
+                                    {}
+                                ], 
+                                "PA 552": [
+                                    "PA 552 (10)", 
+                                    2400, 
+                                    270, 
+                                    {}
+                                ], 
+                                "PA 582": [
+                                    "PA 582 (10)", 
+                                    2400, 
+                                    17, 
+                                    {}
+                                ], 
+                                "PA 585": [
+                                    "PA 585 (10)", 
+                                    2400, 
+                                    17, 
+                                    {}
+                                ], 
+                                "PA 590": [
+                                    "PA 590 (10)", 
+                                    2400, 
+                                    87, 
+                                    {}
+                                ]
+                            }
                         ], 
-                        "PA 513": [
-                            "PA 513", 
-                            770, 
-                            17, 
-                            {}
-                        ], 
-                        "PA 533": [
-                            "PA 533", 
-                            770, 
-                            270, 
-                            {}
-                        ], 
-                        "PA 534": [
-                            "PA 534", 
-                            770, 
-                            17, 
-                            {}
-                        ], 
-                        "PA 540": [
-                            "PA 540", 
-                            770, 
-                            270, 
-                            {}
-                        ], 
-                        "PA 551": [
-                            "PA 551", 
-                            770, 
-                            17, 
-                            {}
-                        ], 
-                        "PA 552": [
-                            "PA 552", 
-                            770, 
-                            270, 
-                            {}
-                        ], 
-                        "PA 582": [
-                            "PA 582", 
-                            770, 
-                            17, 
-                            {}
-                        ], 
-                        "PA 585": [
-                            "PA 585", 
-                            770, 
-                            17, 
-                            {}
-                        ], 
-                        "PA 590": [
-                            "PA 590", 
-                            770, 
-                            87, 
-                            {}
+                        "GL Core": [
+                            "GL Core", 
+                            4200, 
+                            300, 
+                            {
+                                "PA 514": [
+                                    "PA 514 (9)", 
+                                    2200, 
+                                    300, 
+                                    {}
+                                ],
+                                "PA 542": [
+                                    "PA 542 (8)", 
+                                    2000, 
+                                    300, 
+                                    {}
+                                ]
+                            }
                         ]
                     }
-                ], 
-                "MPA Skill": [
-                    "MPA Skill", 
-                    7800, 
-                    677, 
+                 ],
+                "Electives": [
+                    "(GL) Electives",
+                    28600,
+                    374,
                     {
-                        "PA 525": [
-                            "PA 525", 
-                            700, 
-                            270, 
-                            {}
+                        "MPA Skill": [
+                            "MPA Skill", 
+                            9200, 
+                            677, 
+                            {
+                                "PA 525": [
+                                    "PA 525 (6)", 
+                                    1600, 
+                                    270, 
+                                    {}
+                                ], 
+                                "PA 536": [
+                                    "PA 536 (2)", 
+                                    800, 
+                                    17, 
+                                    {}
+                                ], 
+                                "PA 545": [
+                                    "PA 545 (0)", 
+                                    400, 
+                                    270, 
+                                    {}
+                                ], 
+                                "PA 549": [
+                                    "PA 549 (4)", 
+                                    1200, 
+                                    17, 
+                                    {}
+                                ], 
+                                "PA 550": [
+                                    "PA 550 (0)", 
+                                    400, 
+                                    270, 
+                                    {}
+                                ], 
+                                "PA 554": [
+                                    "PA 554 (3)", 
+                                    1000, 
+                                    17, 
+                                    {}
+                                ], 
+                                "PA 555": [
+                                    "PA 555 (3)", 
+                                    1000, 
+                                    270, 
+                                    {}
+                                ], 
+                                "PA 556": [
+                                    "PA 556 (1)", 
+                                    600, 
+                                    17, 
+                                    {}
+                                ], 
+                                "PA 557": [
+                                    "PA 557 (0)", 
+                                    400, 
+                                    17, 
+                                    {}
+                                ], 
+                                "PA 558": [
+                                    "PA 558 (5)", 
+                                    1400, 
+                                    17, 
+                                    {}
+                                ], 
+                                "PA 562": [
+                                    "PA 562 (0)", 
+                                    400, 
+                                    87, 
+                                    {}
+                                ]
+                            }
+                        ],
+                        "GL Skill": [
+                            "GL Skill", 
+                            3600, 
+                            126, 
+                            {
+                                "PA 517": [
+                                    "PA 517 (0)", 
+                                    400, 
+                                    300, 
+                                    {}
+                                ],
+                                "PA 525": [
+                                    "PA 525 (0)", 
+                                    400, 
+                                    300, 
+                                    {}
+                                ],
+                                "PA 536": [
+                                    "PA 536 (0)", 
+                                    400, 
+                                    300, 
+                                    {}
+                                ],
+                                "PA 543": [
+                                    "PA 543 (1)", 
+                                    600, 
+                                    300, 
+                                    {}
+                                ],
+                                "PA 545": [
+                                    "PA 545 (0)", 
+                                    400, 
+                                    300, 
+                                    {}
+                                ],
+                                "PA 553": [
+                                    "PA 553 (1)", 
+                                    600, 
+                                    300, 
+                                    {}
+                                ],
+                                "PA 554": [
+                                    "PA 554 (0)", 
+                                    400, 
+                                    300, 
+                                    {}
+                                ],
+                                "PA 555": [
+                                    "PA 555 (0)", 
+                                    400, 
+                                    300, 
+                                    {}
+                                ]
+                            }
                         ], 
-                        "PA 536": [
-                            "PA 536", 
-                            700, 
-                            17, 
-                            {}
-                        ], 
-                        "PA 545": [
-                            "PA 545", 
-                            700, 
-                            270, 
-                            {}
-                        ], 
-                        "PA 549": [
-                            "PA 549", 
-                            700, 
-                            17, 
-                            {}
-                        ], 
-                        "PA 550": [
-                            "PA 550", 
-                            700, 
-                            270, 
-                            {}
-                        ], 
-                        "PA 554": [
-                            "PA 554", 
-                            700, 
-                            17, 
-                            {}
-                        ], 
-                        "PA 555": [
-                            "PA 555", 
-                            700, 
-                            270, 
-                            {}
-                        ], 
-                        "PA 556": [
-                            "PA 556", 
-                            700, 
-                            17, 
-                            {}
-                        ], 
-                        "PA 557": [
-                            "PA 557", 
-                            700, 
-                            17, 
-                            {}
-                        ], 
-                        "PA 558": [
-                            "PA 558", 
-                            700, 
-                            17, 
-                            {}
-                        ], 
-                        "PA 562": [
-                            "PA 562", 
-                            2900, 
-                            87, 
-                            {}
-                        ]
-                    }
-                ],
-                "GL Core": [
-                    "GL Core", 
-                    7800, 
-                    300, 
-                    {
-                        "PA 514": [
-                            "PA 514", 
-                            3900, 
-                            300, 
-                            {}
+                        "GL Electives": [
+                            "GL Electives", 
+                            6000, 
+                            312, 
+                            {
+                                "PA 510": [
+                                    "PA 510 (10)", 
+                                    2800, 
+                                    300, 
+                                    {}
+                                ],
+                                "PA 523": [
+                                    "PA 523 (1)", 
+                                    600, 
+                                    300, 
+                                    {}
+                                ],
+                                "PA 529": [
+                                    "PA 529 (1)", 
+                                    600, 
+                                    300, 
+                                    {}
+                                ],
+                                "PA 549": [
+                                    "PA 549 (0)", 
+                                    400, 
+                                    300, 
+                                    {}
+                                ],
+                                "PA 550": [
+                                    "PA 550 (0)", 
+                                    400, 
+                                    300, 
+                                    {}
+                                ],
+                                "PA 558": [
+                                    "PA 558 (0)", 
+                                    400, 
+                                    300, 
+                                    {}
+                                ],
+                                "PA 565": [
+                                    "PA 565 (2)", 
+                                    800, 
+                                    300, 
+                                    {}
+                                ]
+                            }
                         ],
-                        "PA 542": [
-                            "PA 542", 
-                            3900, 
-                            300, 
-                            {}
-                        ]
-                    }
-                ],
-                "GL Skill": [
-                    "GL Skill", 
-                    7800, 
-                    126, 
-                    {
-                        "PA 517": [
-                            "PA 517", 
-                            970, 
-                            300, 
-                            {}
-                        ],
-                        "PA 525": [
-                            "PA 525", 
-                            970, 
-                            300, 
-                            {}
-                        ],
-                        "PA 536": [
-                            "PA 536", 
-                            970, 
-                            300, 
-                            {}
-                        ],
-                        "PA 543": [
-                            "PA 543", 
-                            970, 
-                            300, 
-                            {}
-                        ],
-                        "PA 545": [
-                            "PA 545", 
-                            970, 
-                            300, 
-                            {}
-                        ],
-                        "PA 553": [
-                            "PA 553", 
-                            970, 
-                            300, 
-                            {}
-                        ],
-                        "PA 554": [
-                            "PA 554", 
-                            970, 
-                            300, 
-                            {}
-                        ],
-                        "PA 555": [
-                            "PA 555", 
-                            970, 
-                            300, 
-                            {}
-                        ]
-                    }
-                ], 
-                "GL Electives": [
-                    "GL Electives", 
-                    7800, 
-                    312, 
-                    {
-                        "PA 510": [
-                            "PA 510", 
-                            1100, 
-                            300, 
-                            {}
-                        ],
-                        "PA 523": [
-                            "PA 523", 
-                            1100, 
-                            300, 
-                            {}
-                        ],
-                        "PA 529": [
-                            "PA 529", 
-                            1100, 
-                            300, 
-                            {}
-                        ],
-                        "PA 549": [
-                            "PA 549", 
-                            1100, 
-                            300, 
-                            {}
-                        ],
-                        "PA 550": [
-                            "PA 550", 
-                            1100, 
-                            300, 
-                            {}
-                        ],
-                        "PA 558": [
-                            "PA 558", 
-                            1100, 
-                            300, 
-                            {}
-                        ],
-                        "PA 565": [
-                            "PA 565", 
-                            1100, 
-                            300, 
-                            {}
+                        "GL Substitutions": [
+                            "GL Substitutions", 
+                            9800, 
+                            312, 
+                            {
+                                "PA 515": [
+                                    "PA 515 (2)", 
+                                    800, 
+                                    300, 
+                                    {}
+                                ],
+                                "PA 516": [
+                                    "PA 516 (2)", 
+                                    800, 
+                                    300, 
+                                    {}
+                                ],
+                                "PA 520": [
+                                    "PA 520 (1)", 
+                                    600, 
+                                    300, 
+                                    {}
+                                ],
+                                "PA 539": [
+                                    "PA 539 (2)", 
+                                    800, 
+                                    300, 
+                                    {}
+                                ],
+                                "PA 547": [
+                                    "PA 547 (1)", 
+                                    600, 
+                                    300, 
+                                    {}
+                                ],
+                                "PA 548": [
+                                    "PA 548 (1)", 
+                                    600, 
+                                    300, 
+                                    {}
+                                ],
+                                "PA 560": [
+                                    "PA 560 (1)", 
+                                    600, 
+                                    300, 
+                                    {}
+                                ],
+                                "PA 566": [
+                                    "PA 566 (1)", 
+                                    600, 
+                                    300, 
+                                    {}
+                                ],
+                                "PA 567": [
+                                    "PA 567 (1)", 
+                                    600, 
+                                    300, 
+                                    {}
+                                ],
+                                "PA 568": [
+                                    "PA 568 (1)", 
+                                    600, 
+                                    300, 
+                                    {}
+                                ],
+                                "PA 569": [
+                                    "PA 569 (1)", 
+                                    600, 
+                                    300, 
+                                    {}
+                                ],
+                                "PA 594": [
+                                    "PA 594 (1)", 
+                                    800, 
+                                    300, 
+                                    {}
+                                ],
+                                "PA 598": [
+                                    "PA 598 (1)", 
+                                    600, 
+                                    300, 
+                                    {}
+                                ],
+                                "EC 590": [
+                                    "EC 590 (1)", 
+                                    600, 
+                                    300, 
+                                    {}
+                                ],
+
+                                "USP 615": [
+                                    "USP 615 (1)", 
+                                    600, 
+                                    300, 
+                                    {}
+                                ]
+                            }
                         ]
                     }
                 ]
