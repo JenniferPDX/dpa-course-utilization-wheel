@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html>
-<head><style type="text/css">body {
-        font-family:Century Gothic,Arial,Helvetica,sans-serif;
-        padding-bottom: 40px;
+<head>
+<script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+<script type="text/javascript" src="http://getbootstrap.com/dist/js/bootstrap.js"></script>
+<link type="text/css" rel="stylesheet" href="http://getbootstrap.com/dist/css/bootstrap.css">
+
+<style type="text/css">body {
+        font-family:Century Gothic, Arial, Helvetica, sans-serif;
 }
 p{
-  margin-top:20px;
+  margin-top:10px;
 }
 form {
   position: absolute;
@@ -20,8 +25,8 @@ form {
 
 #code_hierarchy_legend
 {
-    height:80px;
-	float:right;padding-top:80px;
+    height:10px;
+	float:right;padding-top:10px;
     text-align:center;
 }
 
@@ -42,27 +47,36 @@ path.active{
   stroke-width : 2;
   stroke-opacity: 1;
 }
+
+h1 {
+  text-align: center;
+  line-height: 100%;
+  margin: .5em 0;
+}
+
+h3 {
+  text-align: center;
+  line-height: 100%;
+}
+
+p {
+  text-align: center;
+}
 </style>
 
 
-<script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
-<script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
-<script type="text/javascript" src="http://getbootstrap.com/dist/js/bootstrap.js"></script>
-<link type="text/css" rel="stylesheet" href="http://getbootstrap.com/dist/css/bootstrap.css">
 <title>Student Classes</title>
 </head>
 <body data-pinterest-extension-installed="ff1.35">
+<link rel="stylesheet" type="text/css" href="../media/style.css">
+
+<h3>Dept of Public Admin</h3>
+<h1>Course Utilization by Specialization</h1>
+<p>Sample of 10 graduated Global Leadership students<p>
+
 	<div id="body">
 		<div class="container">
-			<div class="row-fluid">
-				<div class="span6">					
 					<div id="code_hierarchy"><svg height="720" width="720"></svg></div>
-				</div>
-				<div class="span4 pull-right">
-					<div style="opacity: 0;" id="code_hierarchy_legend"><h2></h2><p></p></div>
-				</div>
-			</div>
-			
 		</div> 
   </div>
    
@@ -175,6 +189,9 @@ function init_code_hierarchy_plot(element_id,data)
         .style("font-size", "16px")
 		.attr("x", function(d) { return d[1]; })
         .attr("text-anchor", "middle")
+        .style("fill", function(d) { // White text for dark backgrounds; dark text for light backgrounds
+            return brightness(d3.rgb(d[5])) < 125 ? "#eee" : "#000"; // #000 is black
+        })
 		.attr("transform", function(d) { 
             return "translate(" + arc.centroid(d) + ")" + 
                    "rotate("    + getAngle(d) +     ")"; })
@@ -340,19 +357,19 @@ function init_code_hierarchy_plot(element_id,data)
 code_hierarchy_data = [
     "MPA", 
     225001, 
-    11601, 
+    "#000066", 
     {
         "Natural Res": [
             "Natural Res", 
             39000, 
-            9494, 
+            "#000099", 
             {
             }
         ], 
         "Global Leader": [
             "Global Leader", 
             69001, 
-            6, 
+            "#792828", 
             {
                 "Core": [
                     "(GL) Core",
@@ -734,21 +751,21 @@ code_hierarchy_data = [
         "Local Gov": [
             "Local Gov", 
             39000, 
-            937, 
+            "#1919ff", 
             {
             }
         ], 
         "Nonprofit Mgmt": [
             "Nonprofit Mgmt", 
             39000, 
-            113, 
+            "#4c4cff", 
             {
             }
         ],
         "HR Mgmt": [
             "HR Mgmt", 
             39000, 
-            113, 
+            "#9999ff", 
             {
             }
         ]
@@ -760,8 +777,13 @@ function init_plots()
     init_code_hierarchy_plot("code_hierarchy",code_hierarchy_data);
 };
 
-
+// http://www.w3.org/WAI/ER/WD-AERT/#color-contrast
+function brightness(rgb) {
+  return rgb.r * .299 + rgb.g * .587 + rgb.b * .114;
+}
 
  init_plots();
 });
-</script></body>
+</script>
+ <img src="GL-Course-Utilization.jpg" alt="GL Course Utilization" align="middle"> 
+</body>
