@@ -102,6 +102,9 @@ p {
 
 	
 <script>
+
+var myDuration = 500;
+
 $(document).ready(function() {
     
 //JM: Load the data, then do everything in this callback	
@@ -326,7 +329,7 @@ d3.json("dpa-course-utilization-wheel.json", function(error, myJSON) {
 						return false;
 					}
 				)
-				.transition().duration(1000).style("opacity","1").attr("pointer-events","all");
+				.transition().duration(myDuration).style("opacity","1").attr("pointer-events","all");
 			}
 			else
 			{
@@ -341,7 +344,7 @@ d3.json("dpa-course-utilization-wheel.json", function(error, myJSON) {
 						return false;
 					}
 				)
-				.transition().duration(1000).style("opacity","0").attr("pointer-events","none");
+				.transition().duration(myDuration).style("opacity","0").attr("pointer-events","none");
 			}
 			svg.selectAll(".form")
 			.filter(
@@ -353,14 +356,14 @@ d3.json("dpa-course-utilization-wheel.json", function(error, myJSON) {
 					return false;
 				}
 			)
-			.transition().duration(1000).attrTween("d",rebaseTween(d));
+			.transition().duration(myDuration).attrTween("d",rebaseTween(d));
 			
 			svg.selectAll('.label')
 			.filter(
 				function (b) {
 					return b[0] >= new_ref[0] && b[1] <= new_ref[1] && b[children_index] >= new_ref[3];
 				}
-			).transition().duration(1000)
+			).transition().duration(myDuration)
 			 .attr("transform", function(b) {
 				 var b_prime = change_ref(b, d);
 				 return "translate(" + arc.centroid(b_prime) + ")" + 
@@ -378,7 +381,7 @@ d3.json("dpa-course-utilization-wheel.json", function(error, myJSON) {
 				{
 					ref = d;
 				}
-				},1000);
+				}, myDuration);
 		};  
 
 	}
