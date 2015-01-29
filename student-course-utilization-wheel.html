@@ -104,13 +104,10 @@ p {
 <script>
 $(document).ready(function() {
     
-	var myJSON;
-		
-d3.json("dpa-course-utilization-wheel.json", function(error, json) {
-		myJSON = json;
+//JM: Load the data, then do everything in this callback	
+d3.json("dpa-course-utilization-wheel.json", function(error, myJSON) {
 
-	function init_code_hierarchy_plot(element_id,data)
-	{
+	function init_code_hierarchy_plot(element_id,data) {
 		var plot = document.getElementById(element_id);
 		while (plot.hasChildNodes())
 		{
@@ -151,16 +148,9 @@ d3.json("dpa-course-utilization-wheel.json", function(error, json) {
 			var current_deg = start_deg;
 			var parent = '';
 
-			if (level > max_level)
-			{
-				return;
-			}
-			if (start_deg == stop_deg)
-			{
-				return;
-			}
-			
-			
+			if (level > max_level)     { return; }
+			if (start_deg == stop_deg) { return; }
+						
 			data_slices.push([start_deg,stop_deg,name,level,data[1],data[2]]);
 			
 			for (var key in children)
@@ -234,8 +224,7 @@ d3.json("dpa-course-utilization-wheel.json", function(error, json) {
 			.text(function(d){return d[2]})
 			.attr("pointer-events","none");
 
-		function get_start_angle(d,ref)
-		{
+		function get_start_angle(d,ref) {
 			if (ref)
 			{
 				var ref_span = ref[1]-ref[0];
@@ -247,8 +236,7 @@ d3.json("dpa-course-utilization-wheel.json", function(error, json) {
 			}
 		}
 		
-		function get_stop_angle(d,ref)
-		{
+		function get_stop_angle(d,ref) {
 			if (ref)
 			{
 				var ref_span = ref[1]-ref[0];
@@ -260,8 +248,7 @@ d3.json("dpa-course-utilization-wheel.json", function(error, json) {
 			}
 		}
 		
-		function get_level(d,ref)
-		{
+		function get_level(d,ref) {
 			if (ref)
 			{
 				return d[children_index]-ref[children_index];
@@ -281,10 +268,8 @@ d3.json("dpa-course-utilization-wheel.json", function(error, json) {
 			];
 		}
 		
-		function rebaseTween(new_ref)
-		{
-			return function(d)
-			{
+		function rebaseTween(new_ref) {
+			return function(d) {
 				var level = d3.interpolate(get_level(d,ref),get_level(d,new_ref));
 				var start_deg = d3.interpolate(get_start_angle(d,ref),get_start_angle(d,new_ref));
 				var stop_deg = d3.interpolate(get_stop_angle(d,ref),get_stop_angle(d,new_ref));
@@ -298,8 +283,7 @@ d3.json("dpa-course-utilization-wheel.json", function(error, json) {
 		
 		 //JM: mouseover function which will send the values to the legend
 		 // Not yet working
-		function mouseover(d)
-		{
+		function mouseover(d) {
 			content.append("p")
 			.attr("id", "annotate")
 	//        .text(d.title ? d.name + ": " + d.title : ' ')
@@ -308,16 +292,13 @@ d3.json("dpa-course-utilization-wheel.json", function(error, json) {
 
 		//JM: mouseout function which removes the values and replaces them with a blank space
 		// Not yet working
-		function mouseout(d)
-		{
+		function mouseout(d) {
 			content.html(' ');
 		}
 
-		
 		var animating = false;
 		
-		function animate(d) 
-		{
+		function animate(d) {
 			d3.select(this).classed('active',true).classed('hovered',false); 
 			if (animating)
 			{
@@ -337,8 +318,7 @@ d3.json("dpa-course-utilization-wheel.json", function(error, json) {
 				new_ref = ref;
 				svg.selectAll(".form-container")
 				.filter(
-					function (b)
-					{
+					function (b) {
 						if (b[0] >= last_ref[0] && b[1] <= last_ref[1]  && b[children_index] >= last_ref[children_index])
 						{
 							return true;
@@ -353,8 +333,7 @@ d3.json("dpa-course-utilization-wheel.json", function(error, json) {
 				new_ref = d;
 				svg.selectAll(".form-container")
 				.filter(
-					function (b)
-					{
+					function (b) {
 						if (b[0] < d[0] || b[1] > d[1] || b[children_index] < d[children_index])
 						{
 							return true;
@@ -366,8 +345,7 @@ d3.json("dpa-course-utilization-wheel.json", function(error, json) {
 			}
 			svg.selectAll(".form")
 			.filter(
-				function (b)
-				{
+				function (b) {
 					if (b[0] >= new_ref[0] && b[1] <= new_ref[1] && b[children_index] >= new_ref[children_index])
 					{
 						return true;
@@ -379,8 +357,7 @@ d3.json("dpa-course-utilization-wheel.json", function(error, json) {
 			
 			svg.selectAll('.label')
 			.filter(
-				function (b)
-				{
+				function (b) {
 					return b[0] >= new_ref[0] && b[1] <= new_ref[1] && b[children_index] >= new_ref[3];
 				}
 			).transition().duration(1000)
@@ -406,18 +383,12 @@ d3.json("dpa-course-utilization-wheel.json", function(error, json) {
 
 	}
 
-	
-	function init_plots()
-	{
-		init_code_hierarchy_plot("code_hierarchy",myJSON);
-	};
-
 	// http://www.w3.org/WAI/ER/WD-AERT/#color-contrast
 	function brightness(rgb) {
 	  return rgb.r * .299 + rgb.g * .587 + rgb.b * .114;
 	}
 
-	 init_plots();
+	init_code_hierarchy_plot("code_hierarchy", myJSON);
 	});
 });
 
