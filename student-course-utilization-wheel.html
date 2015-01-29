@@ -62,6 +62,21 @@ h3 {
 p {
   text-align: center;
 }
+
+#annotation {
+    border: 3px solid rgb(102, 122, 102);
+    margin-top: 0px;
+    padding-left: 6px;
+    padding-top: 0px;
+    border-radius: 4px;
+    position: absolute;
+    min-height: 1.2em;
+    width: 340px;
+    top: 140px;
+    right: 20px;
+    background-color: rgb(102, 122, 102);
+    color: white;
+}
 </style>
 
 
@@ -75,11 +90,17 @@ p {
 <p>Student sample size: NR: 16; GL: 10; LG: 10; NP: 10; HR: 7<p>
 
 	<div id="body">
+<!--
+		<div id="annotation">
+			<p>Hover over a course number to see its title.</p>
+		</div>
+-->
 		<div class="container">
-					<div id="code_hierarchy"><svg height="1040" width="1040"></svg></div>
+			<div id="code_hierarchy"><svg height="1040" width="1040"></svg></div>
 		</div> 
-  </div>
-   
+	</div>
+
+	
 <script>$(document).ready(function() {
     
 function init_code_hierarchy_plot(element_id,data)
@@ -90,15 +111,19 @@ function init_code_hierarchy_plot(element_id,data)
         plot.removeChild(plot.firstChild);
     }
 
+	//JM: Define some constants - indexes into the JSON data structure, 
+	//which is still a bit of a mystery to me
+    var name_index = 0; // not used
+    var count_index = 1; // JM: not clear on usage of this. I think this is my sizing element
+    var children_index = 3;
+	var color_index = 5;
+
     var width = plot.offsetWidth;
     var height = width;
     var x_margin = 40;
     var radius = width/7;
     var y_margin = 40;
-    var name_index = 0;
-    var count_index = 1;
-    var children_index = 3;
-	
+	var content = d3.select("#annotation"); // To display course titles on mouse hover
    
     var max_depth=3;
     
@@ -115,7 +140,7 @@ function init_code_hierarchy_plot(element_id,data)
     function process_data(data,level,start_deg,stop_deg)
     {
         var name = data[0];
-        var total = data[1];
+        var total = data[1]; //JM: I think this is my sizing element... "total"
         var children = data[children_index];
         var current_deg = start_deg;
 		var parent = '';
@@ -144,6 +169,7 @@ function init_code_hierarchy_plot(element_id,data)
 			var child_stop_deg = current_deg;
             var span_deg = child_stop_deg-child_start_deg;
             
+			// JM: Recursing?
 			process_data(child,level+1,child_start_deg,child_stop_deg);
         }
     }
@@ -171,10 +197,12 @@ function init_code_hierarchy_plot(element_id,data)
     slices.append("path")
         .attr("d", arc)
         .attr("id",function(d,i){return d[2]+""+i;})
-        .style("fill", function(d) { return color(d[2]);}) // leaving this in to get some default colors
-        .style("fill", function(d) { return d[5];}) // overriding the fill color with value from the JSON
-                                                    // FYI: d[3] is the level or depth of the datum
-        .on("click",animate)        
+        .style("fill", function(d) { return color(d[2]);}) // JM: leaving this in to get some default colors
+        .style("fill", function(d) { return d[color_index];}) // JM: overriding the fill color with value from the JSON
+                                                    // JM: FYI: d[3] is the level or depth of the datum
+        .on("click",animate)
+		.on("mouseover", mouseover) // JM: for hover
+		.on("mouseout", mouseout)   // JM: for hover     
         .attr("class","form")
         .append("svg:title")
         .text(function(d) { return Math.round(d[0]*100)/100 +" , "+ Math.round(d[1]*100)/100; });
@@ -190,7 +218,7 @@ function init_code_hierarchy_plot(element_id,data)
 		.attr("x", function(d) { return d[1]; })
         .attr("text-anchor", "middle")
         .style("fill", function(d) { // White text for dark backgrounds; dark text for light backgrounds
-            return brightness(d3.rgb(d[5])) < 125 ? "#eee" : "#000"; // #000 is black
+            return brightness(d3.rgb(d[color_index])) < 125 ? "#eee" : "#000"; // #000 is black
         })
 		.attr("transform", function(d) { 
             return "translate(" + arc.centroid(d) + ")" + 
@@ -261,6 +289,24 @@ function init_code_hierarchy_plot(element_id,data)
             }
         }
     }
+	
+	 //JM: mouseover function which will send the values to the legend
+	 // Not yet working
+    function mouseover(d)
+    {
+        content.append("p")
+        .attr("id", "annotate")
+//        .text(d.title ? d.name + ": " + d.title : ' ')
+		.text(function(d){return d[2]})
+    }
+
+    //JM: mouseout function which removes the values and replaces them with a blank space
+	// Not yet working
+    function mouseout(d)
+    {
+        content.html(' ');
+    }
+
     
     var animating = false;
     
@@ -357,12 +403,12 @@ function init_code_hierarchy_plot(element_id,data)
 code_hierarchy_data = 
 [
   "MPA",
-  381903,
+  378920,
   "#481818",
   {
     "Global Leader": [
       "GL",
-      69001,
+      68702,
       "#792828",
       {
         "Core": [
@@ -460,7 +506,7 @@ code_hierarchy_data =
         ],
         "Electives": [
           "(GL) Electives",
-          30301,
+          30000,
           "#6f3700",
           {
             "MPA Skill": [
@@ -593,12 +639,12 @@ code_hierarchy_data =
             ],
             "GL Electives": [
               "GL Electives",
-              6600,
+              6300,
               "#b98f66",
               {
                 "PA 510": [
                   "PA 510 (10)",
-                  3600,
+                  3300,
                   "#002600",
                   {}
                 ],
@@ -712,8 +758,8 @@ code_hierarchy_data =
                   {}
                 ],
                 "PA 594": [
-                  "PA 594 (1)",
-                  600,
+                  "PA 594 (2)",
+                  900,
                   "#cce5cc",
                   {}
                 ],
@@ -743,7 +789,7 @@ code_hierarchy_data =
     ],
     "Local Gov": [
       "LG",
-      74700,
+      72602,
       "#792828",
       {
         "Core": [
@@ -841,7 +887,7 @@ code_hierarchy_data =
         ],
         "Electives": [
           "(LG) Electives",
-          36900,
+          34800,
           "#6f3700",
           {
             "MPA Skill": [
@@ -986,12 +1032,12 @@ code_hierarchy_data =
             ],
             "LG Electives": [
               "GL Electives",
-              12300,
+              10200,
               "#b98f66",
               {
                 "PA 510": [
                   "PA 510 (10)",
-                  5400,
+                  3300,
                   "#002600",
                   {}
                 ],
@@ -1184,7 +1230,7 @@ code_hierarchy_data =
     ],
     "HR Mgmt": [
       "HR",
-      52501,
+      52502,
       "#792828",
       {
         "Core": [
@@ -1282,7 +1328,7 @@ code_hierarchy_data =
         ],
         "Electives": [
           "(HR) Electives",
-          24901,
+          24900,
           "#6f3700",
           {
             "MPA Skill": [
@@ -1470,7 +1516,7 @@ code_hierarchy_data =
             ],
             "HR Substitutions": [
               "HR Substitutes",
-              6301,
+              6300,
               "#d0b499",
               {
                 "PA 504": [
@@ -1535,7 +1581,7 @@ code_hierarchy_data =
     ],
     "Natural Res": [
       "NR",
-      113101,
+      113105,
       "#792828",
       {
         "Core": [
@@ -1627,7 +1673,7 @@ code_hierarchy_data =
         ],
         "Electives": [
           "(NR) Electives",
-          61801,
+          61803,
           "#6f3700",
           {
             "MPA Skill": [
@@ -1857,7 +1903,7 @@ code_hierarchy_data =
             ],
             "NR Substitutions": [
               "NR Substitutes",
-              24900,
+              24903,
               "#d0b499",
               {
                 "PA 505": [
@@ -2036,7 +2082,7 @@ code_hierarchy_data =
     ],
     "NP Mgmt": [
       "NP",
-      72600,
+      72005,
       "#792828",
       {
         "Core": [
@@ -2146,7 +2192,7 @@ code_hierarchy_data =
         ],
         "Electives": [
           "(NP) Electives",
-          27900,
+          27302,
           "#6f3700",
           {
             "MPA Skill": [
@@ -2346,7 +2392,7 @@ code_hierarchy_data =
             ],
             "NP Substitutions": [
               "NP Substitutes",
-              7800,
+              7202,
               "#d0b499",
               {
                 "PA 504": [
@@ -2357,7 +2403,7 @@ code_hierarchy_data =
                 ],
                 "PA 510": [
                   "PA 510 (5)",
-                  2400,
+                  1800,
                   "#4ca64c",
                   {}
                 ],
