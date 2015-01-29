@@ -101,2376 +101,326 @@ p {
 	</div>
 
 	
-<script>$(document).ready(function() {
+<script>
+$(document).ready(function() {
     
-function init_code_hierarchy_plot(element_id,data)
-{
-    var plot = document.getElementById(element_id);
-    while (plot.hasChildNodes())
-    {
-        plot.removeChild(plot.firstChild);
-    }
-
-	//JM: Define some constants - indexes into the JSON data structure, 
-	//which is still a bit of a mystery to me
-    var name_index = 0; // not used
-    var count_index = 1; // JM: not clear on usage of this. I think this is my sizing element
-    var children_index = 3;
-	var color_index = 5;
-
-    var width = plot.offsetWidth;
-    var height = width;
-    var x_margin = 40;
-    var radius = width/7;
-    var y_margin = 40;
-	var content = d3.select("#annotation"); // To display course titles on mouse hover
-   
-    var max_depth=3;
-    
-    var data_slices = [];
-    var max_level = 4;
-    var color = d3.scale.category20c();
-
-    var svg = d3.select("#"+element_id).append("svg")
-        .attr("width", width)
-        .attr("height", height)
-        .append("g")
-        .attr("transform", "translate(" + width / 2 + "," + height * .52 + ")");
-      
-    function process_data(data,level,start_deg,stop_deg)
-    {
-        var name = data[0];
-        var total = data[1]; //JM: I think this is my sizing element... "total"
-        var children = data[children_index];
-        var current_deg = start_deg;
-		var parent = '';
-
-        if (level > max_level)
-        {
-            return;
-        }
-        if (start_deg == stop_deg)
-        {
-            return;
-        }
+	var myJSON;
 		
-		
-        data_slices.push([start_deg,stop_deg,name,level,data[1],data[2]]);
-		
-        for (var key in children)
-        {
-            child = children[key];
-            
-			var inc_deg = (stop_deg-start_deg)/total*child[count_index];
-            var child_start_deg = current_deg;
-            
-			current_deg+=inc_deg;
-            
-			var child_stop_deg = current_deg;
-            var span_deg = child_stop_deg-child_start_deg;
-            
-			// JM: Recursing?
-			process_data(child,level+1,child_start_deg,child_stop_deg);
-        }
-    }
-    
-    process_data(data,0,0,360./180.0*Math.PI);
+d3.json("dpa-course-utilization-wheel.json", function(error, json) {
+		myJSON = json;
 
-    var ref = data_slices[0];
-    var next_ref = ref;
-    var last_refs = [];
-
-    var thickness = width/2.0/(max_level+2)*1.1;
-        
-    var arc = d3.svg.arc()
-    .startAngle(function(d) { if(d[children_index]==0){return d[0];}return d[0]+0.01; })
-    .endAngle(function(d) { if(d[children_index]==0){return d[1];}return d[1]-0.01; })
-    .innerRadius(function(d) { return 1.1*d[children_index]*thickness; })
-    .outerRadius(function(d) { return (1.1*d[children_index]+1)*thickness; });    
-    
-    var slices = svg.selectAll(".form-container")
-        .data(function(d) { return data_slices; })
-        .enter()
-        .append("g")
-        .classed('form-container', true);
-		
-    slices.append("path")
-        .attr("d", arc)
-        .attr("id",function(d,i){return d[2]+""+i;})
-        .style("fill", function(d) { return color(d[2]);}) // JM: leaving this in to get some default colors
-        .style("fill", function(d) { return d[color_index];}) // JM: overriding the fill color with value from the JSON
-                                                    // JM: FYI: d[3] is the level or depth of the datum
-        .on("click",animate)
-		.on("mouseover", mouseover) // JM: for hover
-		.on("mouseout", mouseout)   // JM: for hover     
-        .attr("class","form")
-        .append("svg:title")
-        .text(function(d) { return Math.round(d[0]*100)/100 +" , "+ Math.round(d[1]*100)/100; });
-
-    function getAngle(d) {
-        var thetaDeg = (180 / Math.PI * (arc.startAngle()(d) + arc.endAngle()(d)) / 2 - 90);
-        return (thetaDeg > 90) ? thetaDeg - 180 : thetaDeg;
-    }
-    
-    slices.append("text")
-        .classed('label', true)
-        .style("font-size", "16px")
-		.attr("x", function(d) { return d[1]; })
-        .attr("text-anchor", "middle")
-        .style("fill", function(d) { // White text for dark backgrounds; dark text for light backgrounds
-            return brightness(d3.rgb(d[color_index])) < 125 ? "#eee" : "#000"; // #000 is black
-        })
-		.attr("transform", function(d) { 
-            return "translate(" + arc.centroid(d) + ")" + 
-                   "rotate("    + getAngle(d) +     ")"; })
-		.attr("dx", "6") // margin
-		.attr("dy", ".35em") // vertical-align
-		.text(function(d){return d[2]})
-        .attr("pointer-events","none");
-
-    function get_start_angle(d,ref)
-    {
-        if (ref)
-        {
-            var ref_span = ref[1]-ref[0];
-            return (d[0]-ref[0])/ref_span*Math.PI*2.0
-        }
-        else
-        {
-            return d[0];
-        }
-    }
-    
-    function get_stop_angle(d,ref)
-    {
-        if (ref)
-        {
-            var ref_span = ref[1]-ref[0];
-            return (d[1]-ref[0])/ref_span*Math.PI*2.0
-        }
-        else
-        {
-            return d[0];
-        }
-    }
-    
-    function get_level(d,ref)
-    {
-        if (ref)
-        {
-            return d[children_index]-ref[children_index];
-        }
-        else
-        {
-            return d[children_index];
-        }
-    }
-    
-    function change_ref(data_point, reference_point) {
-        return [
-            get_start_angle(data_point, reference_point),
-            get_stop_angle (data_point, reference_point),
-            data_point[2],
-            get_level      (data_point, reference_point)
-        ];
-    }
-    
-    function rebaseTween(new_ref)
-    {
-        return function(d)
-        {
-            var level = d3.interpolate(get_level(d,ref),get_level(d,new_ref));
-            var start_deg = d3.interpolate(get_start_angle(d,ref),get_start_angle(d,new_ref));
-            var stop_deg = d3.interpolate(get_stop_angle(d,ref),get_stop_angle(d,new_ref));
-            var opacity = d3.interpolate(100,0);
-            return function(t)
-            {
-                return arc([start_deg(t),stop_deg(t),d[2],level(t)]);
-            }
-        }
-    }
-	
-	 //JM: mouseover function which will send the values to the legend
-	 // Not yet working
-    function mouseover(d)
-    {
-        content.append("p")
-        .attr("id", "annotate")
-//        .text(d.title ? d.name + ": " + d.title : ' ')
-		.text(function(d){return d[2]})
-    }
-
-    //JM: mouseout function which removes the values and replaces them with a blank space
-	// Not yet working
-    function mouseout(d)
-    {
-        content.html(' ');
-    }
-
-    
-    var animating = false;
-    
-    function animate(d) 
+	function init_code_hierarchy_plot(element_id,data)
 	{
-		d3.select(this).classed('active',true).classed('hovered',false); 
-        if (animating)
-        {
-            return;
-        }
-        animating = true;
-        var revert = false;
-        var new_ref;
-        if (d == ref && last_refs.length > 0)
-        {
-            revert = true;
-            last_ref = last_refs.pop();
-        }
-        if (revert)
-        {
-            d = last_ref;
-            new_ref = ref;
-            svg.selectAll(".form-container")
-            .filter(
-                function (b)
-                {
-                    if (b[0] >= last_ref[0] && b[1] <= last_ref[1]  && b[children_index] >= last_ref[children_index])
-                    {
-                        return true;
-                    }
-                    return false;
-                }
-            )
-            .transition().duration(1000).style("opacity","1").attr("pointer-events","all");
-        }
-        else
-        {
-            new_ref = d;
-            svg.selectAll(".form-container")
-            .filter(
-                function (b)
-                {
-                    if (b[0] < d[0] || b[1] > d[1] || b[children_index] < d[children_index])
-                    {
-                        return true;
-                    }
-                    return false;
-                }
-            )
-            .transition().duration(1000).style("opacity","0").attr("pointer-events","none");
-        }
-        svg.selectAll(".form")
-        .filter(
-            function (b)
-            {
-                if (b[0] >= new_ref[0] && b[1] <= new_ref[1] && b[children_index] >= new_ref[children_index])
-                {
-                    return true;
-                }
-                return false;
-            }
-        )
-        .transition().duration(1000).attrTween("d",rebaseTween(d));
-        
-        svg.selectAll('.label')
-        .filter(
-            function (b)
-            {
-                return b[0] >= new_ref[0] && b[1] <= new_ref[1] && b[children_index] >= new_ref[3];
-            }
-        ).transition().duration(1000)
-         .attr("transform", function(b) {
-             var b_prime = change_ref(b, d);
-             return "translate(" + arc.centroid(b_prime) + ")" + 
-                    "rotate("    + getAngle(b_prime) +     ")"; 
-         })
-                     
-        setTimeout(function(){
-            animating = false;
-            if (! revert)
-            {
-                last_refs.push(ref);
-                ref = d;
-            }
-            else
-            {
-                ref = d;
-            }
-            },1000);
-    };  
+		var plot = document.getElementById(element_id);
+		while (plot.hasChildNodes())
+		{
+			plot.removeChild(plot.firstChild);
+		}
 
-}
+		//JM: Define some constants - indexes into the JSON data structure, 
+		//which is still a bit of a mystery to me
+		var name_index = 0; // not used
+		var count_index = 1; // JM: not clear on usage of this. I think this is my sizing element
+		var children_index = 3;
+		var color_index = 5;
 
-code_hierarchy_data = 
-[
-  "MPA",
-  378920,
-  "#481818",
-  {
-    "Global Leader": [
-      "GL",
-      68702,
-      "#792828",
-      {
-        "Core": [
-          "(GL) Core",
-          38700,
-          "#983232",
-          {
-            "MPA Core": [
-              "MPA Core",
-              33000,
-              "#b26666",
-              {
-                "PA 511": [
-                  "PA 511 (10)",
-                  3300,
-                  "#002600",
-                  {}
-                ],
-                "PA 513": [
-                  "PA 513 (10)",
-                  3300,
-                  "#002600",
-                  {}
-                ],
-                "PA 533": [
-                  "PA 533 (10)",
-                  3300,
-                  "#002600",
-                  {}
-                ],
-                "PA 534": [
-                  "PA 534 (10)",
-                  3300,
-                  "#002600",
-                  {}
-                ],
-                "PA 540": [
-                  "PA 540 (10)",
-                  3300,
-                  "#002600",
-                  {}
-                ],
-                "PA 551": [
-                  "PA 551 (10)",
-                  3300,
-                  "#002600",
-                  {}
-                ],
-                "PA 552": [
-                  "PA 552 (10)",
-                  3300,
-                  "#002600",
-                  {}
-                ],
-                "PA 582": [
-                  "PA 582 (10)",
-                  3300,
-                  "#002600",
-                  {}
-                ],
-                "PA 585": [
-                  "PA 585 (10)",
-                  3300,
-                  "#002600",
-                  {}
-                ],
-                "PA 590": [
-                  "PA 590 (10)",
-                  3300,
-                  "#002600",
-                  {}
-                ]
-              }
-            ],
-            "GL Core": [
-              "GL Core",
-              5700,
-              "#cb9999",
-              {
-                "PA 514": [
-                  "PA 514 (9)",
-                  3000,
-                  "#003300",
-                  {}
-                ],
-                "PA 542": [
-                  "PA 542 (8)",
-                  2700,
-                  "#004c00",
-                  {}
-                ]
-              }
-            ]
-          }
-        ],
-        "Electives": [
-          "(GL) Electives",
-          30000,
-          "#6f3700",
-          {
-            "MPA Skill": [
-              "MPA Skill",
-              10500,
-              "#8b4500",
-              {
-                "PA 525": [
-                  "PA 525 (6)",
-                  2100,
-                  "#008000",
-                  {}
-                ],
-                "PA 536": [
-                  "PA 536 (2)",
-                  900,
-                  "#99cc99",
-                  {}
-                ],
-                "PA 545": [
-                  "PA 545 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 549": [
-                  "PA 549 (4)",
-                  1500,
-                  "#66b266",
-                  {}
-                ],
-                "PA 550": [
-                  "PA 550 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 554": [
-                  "PA 554 (3)",
-                  1200,
-                  "#7fbf7f",
-                  {}
-                ],
-                "PA 555": [
-                  "PA 555 (3)",
-                  1200,
-                  "#7fbf7f",
-                  {}
-                ],
-                "PA 556": [
-                  "PA 556 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 557": [
-                  "PA 557 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 558": [
-                  "PA 558 (5)",
-                  1800,
-                  "#4ca64c",
-                  {}
-                ],
-                "PA 562": [
-                  "PA 562 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ]
-              }
-            ],
-            "GL Skill": [
-              "GL Skill",
-              3000,
-              "#a26a32",
-              {
-                "PA 517": [
-                  "PA 517 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 525": [
-                  "PA 525 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 536": [
-                  "PA 536 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 543": [
-                  "PA 543 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 545": [
-                  "PA 545 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 553": [
-                  "PA 553 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 554": [
-                  "PA 554 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 555": [
-                  "PA 555 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ]
-              }
-            ],
-            "GL Electives": [
-              "GL Electives",
-              6300,
-              "#b98f66",
-              {
-                "PA 510": [
-                  "PA 510 (10)",
-                  3300,
-                  "#002600",
-                  {}
-                ],
-                "PA 523": [
-                  "PA 523 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 529": [
-                  "PA 529 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 549": [
-                  "PA 549 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 550": [
-                  "PA 550 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 558": [
-                  "PA 558 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 565": [
-                  "PA 565 (2)",
-                  900,
-                  "#99cc99",
-                  {}
-                ]
-              }
-            ],
-            "GL Substitutions": [
-              "GL Substitutes",
-              10200,
-              "#d0b499",
-              {
-                "PA 515": [
-                  "PA 515 (2)",
-                  900,
-                  "#99cc99",
-                  {}
-                ],
-                "PA 516": [
-                  "PA 516 (2)",
-                  900,
-                  "#99cc99",
-                  {}
-                ],
-                "PA 520": [
-                  "PA 520 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 539": [
-                  "PA 539 (2)",
-                  900,
-                  "#99cc99",
-                  {}
-                ],
-                "PA 547": [
-                  "PA 547 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 548": [
-                  "PA 548 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 560": [
-                  "PA 560 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 566": [
-                  "PA 566 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 567": [
-                  "PA 567 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 568": [
-                  "PA 568 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 569": [
-                  "PA 569 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 594": [
-                  "PA 594 (2)",
-                  900,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 598": [
-                  "PA 598 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "EC 590": [
-                  "EC 590 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "USP 615": [
-                  "USP 615 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ],
-    "Local Gov": [
-      "LG",
-      72602,
-      "#792828",
-      {
-        "Core": [
-          "(LG) Core",
-          37800,
-          "#983232",
-          {
-            "MPA Core": [
-              "MPA Core",
-              33000,
-              "#b26666",
-              {
-                "PA 511": [
-                  "PA 511 (10)",
-                  3300,
-                  "#002600",
-                  {}
-                ],
-                "PA 513": [
-                  "PA 513 (10)",
-                  3300,
-                  "#002600",
-                  {}
-                ],
-                "PA 533": [
-                  "PA 533 (10)",
-                  3300,
-                  "#002600",
-                  {}
-                ],
-                "PA 534": [
-                  "PA 534 (10)",
-                  3300,
-                  "#002600",
-                  {}
-                ],
-                "PA 540": [
-                  "PA 540 (10)",
-                  3300,
-                  "#002600",
-                  {}
-                ],
-                "PA 551": [
-                  "PA 551 (10)",
-                  3300,
-                  "#002600",
-                  {}
-                ],
-                "PA 552": [
-                  "PA 552 (10)",
-                  3300,
-                  "#002600",
-                  {}
-                ],
-                "PA 582": [
-                  "PA 582 (10)",
-                  3300,
-                  "#002600",
-                  {}
-                ],
-                "PA 585": [
-                  "PA 585 (10)",
-                  3300,
-                  "#002600",
-                  {}
-                ],
-                "PA 590": [
-                  "PA 590 (10)",
-                  3300,
-                  "#002600",
-                  {}
-                ]
-              }
-            ],
-            "LG Core": [
-              "LG Core",
-              4800,
-              "#cb9999",
-              {
-                "PA 560": [
-                  "PA 560 (7)",
-                  2400,
-                  "#004c00",
-                  {}
-                ],
-                "PA 561": [
-                  "PA 561 (7)",
-                  2400,
-                  "#004c00",
-                  {}
-                ]
-              }
-            ]
-          }
-        ],
-        "Electives": [
-          "(LG) Electives",
-          34800,
-          "#6f3700",
-          {
-            "MPA Skill": [
-              "MPA Skill",
-              7800,
-              "#8b4500",
-              {
-                "PA 525": [
-                  "PA 525 (2)",
-                  900,
-                  "#99cc99",
-                  {}
-                ],
-                "PA 536": [
-                  "PA 536 (4)",
-                  1500,
-                  "#66b266",
-                  {}
-                ],
-                "PA 545": [
-                  "PA 545 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 549": [
-                  "PA 549 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 550": [
-                  "PA 550 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 554": [
-                  "PA 554 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 555": [
-                  "PA 555 (5)",
-                  1800,
-                  "#4ca64c",
-                  {}
-                ],
-                "PA 556": [
-                  "PA 556 (2)",
-                  900,
-                  "#99cc99",
-                  {}
-                ],
-                "PA 557": [
-                  "PA 557 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 558": [
-                  "PA 558 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 562": [
-                  "PA 562 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ]
-              }
-            ],
-            "LG Skill": [
-              "GL Skill",
-              6600,
-              "#a26a32",
-              {
-                "PA 514": [
-                  "PA 514 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 536": [
-                  "PA 536 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 549": [
-                  "PA 549 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 550": [
-                  "PA 550 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 555": [
-                  "PA 555 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 556": [
-                  "PA 556 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 557": [
-                  "PA 557 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 558": [
-                  "PA 558 (6)",
-                  2100,
-                  "#008000",
-                  {}
-                ],
-                "USP 591": [
-                  "USP 591 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "USP 592": [
-                  "USP 592 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ]
-              }
-            ],
-            "LG Electives": [
-              "GL Electives",
-              10200,
-              "#b98f66",
-              {
-                "PA 510": [
-                  "PA 510 (10)",
-                  3300,
-                  "#002600",
-                  {}
-                ],
-                "PA 517": [
-                  "PA 517 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 519": [
-                  "PA 519 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 542": [
-                  "PA 542 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 543": [
-                  "PA 543 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 545": [
-                  "PA 545 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 546": [
-                  "PA 546 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 563": [
-                  "PA 563 (3)",
-                  1200,
-                  "#7fbf7f",
-                  {}
-                ],
-                "PA 564": [
-                  "PA 564 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 583": [
-                  "PA 583 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 593": [
-                  "PA 593 (3)",
-                  1200,
-                  "#7fbf7f",
-                  {}
-                ],
-                "USP 531": [
-                  "USP 531 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "USP 542": [
-                  "USP 542 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "USP 551": [
-                  "USP 551 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "USP 568": [
-                  "USP 568 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ]
-              }
-            ],
-            "LG Substitutions": [
-              "GL Substitutes",
-              10200,
-              "#d0b499",
-              {
-                "PA 505": [
-                  "PA 505 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 515": [
-                  "PA 515 (3)",
-                  1200,
-                  "#7fbf7f",
-                  {}
-                ],
-                "PA 516": [
-                  "PA 516 (3)",
-                  1200,
-                  "#7fbf7f",
-                  {}
-                ],
-                "PA 541": [
-                  "PA 541 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 553": [
-                  "PA 553 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 554": [
-                  "PA 554 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 594": [
-                  "PA 594 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 598": [
-                  "PA 598 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PHE 550": [
-                  "PHE 550 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PHE 556": [
-                  "PHE 556 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PHE 557": [
-                  "PHE 557 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PHE 558": [
-                  "PHE 558 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PHE 559": [
-                  "PHE 559 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "SOC 569": [
-                  "SOC 569 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "UPS 532": [
-                  "USP 532 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ],
-    "HR Mgmt": [
-      "HR",
-      52502,
-      "#792828",
-      {
-        "Core": [
-          "(HR) Core",
-          27600,
-          "#983232",
-          {
-            "MPA Core": [
-              "MPA Core",
-              24000,
-              "#b26666",
-              {
-                "PA 511": [
-                  "PA 511 (7)",
-                  2400,
-                  "#004c00",
-                  {}
-                ],
-                "PA 513": [
-                  "PA 513 (7)",
-                  2400,
-                  "#004c00",
-                  {}
-                ],
-                "PA 533": [
-                  "PA 533 (7)",
-                  2400,
-                  "#004c00",
-                  {}
-                ],
-                "PA 534": [
-                  "PA 534 (7)",
-                  2400,
-                  "#004c00",
-                  {}
-                ],
-                "PA 540": [
-                  "PA 540 (7)",
-                  2400,
-                  "#004c00",
-                  {}
-                ],
-                "PA 551": [
-                  "PA 551 (7)",
-                  2400,
-                  "#004c00",
-                  {}
-                ],
-                "PA 552": [
-                  "PA 552 (7)",
-                  2400,
-                  "#004c00",
-                  {}
-                ],
-                "PA 582": [
-                  "PA 582 (7)",
-                  2400,
-                  "#004c00",
-                  {}
-                ],
-                "PA 585": [
-                  "PA 585 (7)",
-                  2400,
-                  "#004c00",
-                  {}
-                ],
-                "PA 590": [
-                  "PA 590 (7)",
-                  2400,
-                  "#004c00",
-                  {}
-                ]
-              }
-            ],
-            "HR Core": [
-              "HR Core",
-              3600,
-              "#cb9999",
-              {
-                "PA 510": [
-                  "PA 510 (6)",
-                  2100,
-                  "#008000",
-                  {}
-                ],
-                "PA 593": [
-                  "PA 593 (4)",
-                  1500,
-                  "#66b266",
-                  {}
-                ]
-              }
-            ]
-          }
-        ],
-        "Electives": [
-          "(HR) Electives",
-          24900,
-          "#6f3700",
-          {
-            "MPA Skill": [
-              "MPA Skill",
-              6900,
-              "#8b4500",
-              {
-                "PA 525": [
-                  "PA 525 (2)",
-                  900,
-                  "#99cc99",
-                  {}
-                ],
-                "PA 536": [
-                  "PA 536 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 545": [
-                  "PA 545 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 549": [
-                  "PA 549 (4)",
-                  1500,
-                  "#66b266",
-                  {}
-                ],
-                "PA 550": [
-                  "PA 550 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 554": [
-                  "PA 554 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 555": [
-                  "PA 555 (2)",
-                  900,
-                  "#99cc99",
-                  {}
-                ],
-                "PA 556": [
-                  "PA 556 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 557": [
-                  "PA 557 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 558": [
-                  "PA 558 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 562": [
-                  "PA 562 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ]
-              }
-            ],
-            "HR Skill": [
-              "HR Skill",
-              5400,
-              "#a26a32",
-              {
-                "PA 517": [
-                  "PA 517 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 525": [
-                  "PA 525 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 529": [
-                  "PA 529 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 536": [
-                  "PA 536 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 545": [
-                  "PA 545 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 548": [
-                  "PA 548 (3)",
-                  1200,
-                  "#7fbf7f",
-                  {}
-                ],
-                "PA 549": [
-                  "PA 549 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 550": [
-                  "PA 550 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "USP 555": [
-                  "USP 555 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "USP 556": [
-                  "USP 556 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "USP 598": [
-                  "USP 598 (2)",
-                  900,
-                  "#99cc99",
-                  {}
-                ]
-              }
-            ],
-            "HR Electives": [
-              "HR Electives",
-              6300,
-              "#b98f66",
-              {
-                "PA 510": [
-                  "PA 510 (4)",
-                  1500,
-                  "#66b266",
-                  {}
-                ],
-                "PA 546": [
-                  "PA 546 (4)",
-                  1500,
-                  "#66b266",
-                  {}
-                ],
-                "PA 562": [
-                  "PA 562 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 591": [
-                  "PA 591 (4)",
-                  1500,
-                  "#66b266",
-                  {}
-                ],
-                "PA 594": [
-                  "PA 594 (3)",
-                  1200,
-                  "#7fbf7f",
-                  {}
-                ]
-              }
-            ],
-            "HR Substitutions": [
-              "HR Substitutes",
-              6300,
-              "#d0b499",
-              {
-                "PA 504": [
-                  "PA 504 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 522": [
-                  "PA 522 (1)",
-                  600,
-                  "#7fbf7f",
-                  {}
-                ],
-                "PA 547": [
-                  "PA 547 (2)",
-                  900,
-                  "#7fbf7f",
-                  {}
-                ],
-                "PA 591": [
-                  "PA 591 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 595": [
-                  "PA 595 (3)",
-                  1200,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 596": [
-                  "PA 596 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 597": [
-                  "PA 597 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "BA 523": [
-                  "BA 523 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "CR 507": [
-                  "CR 507 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ],
-    "Natural Res": [
-      "NR",
-      113105,
-      "#792828",
-      {
-        "Core": [
-          "(NR) Core",
-          51300,
-          "#983232",
-          {
-            "MPA Core": [
-              "MPA Core",
-              46800,
-              "#b26666",
-              {
-                "PA 511": [
-                  "PA 511 (16)",
-                  5100,
-                  "#002600",
-                  {}
-                ],
-                "PA 513": [
-                  "PA 513 (14)",
-                  4500,
-                  "#002600",
-                  {}
-                ],
-                "PA 533": [
-                  "PA 533 (14)",
-                  4500,
-                  "#002600",
-                  {}
-                ],
-                "PA 534": [
-                  "PA 534 (16)",
-                  5100,
-                  "#002600",
-                  {}
-                ],
-                "PA 540": [
-                  "PA 540 (15)",
-                  4800,
-                  "#002600",
-                  {}
-                ],
-                "PA 551": [
-                  "PA 551 (16)",
-                  5100,
-                  "#002600",
-                  {}
-                ],
-                "PA 552": [
-                  "PA 552 (15)",
-                  4800,
-                  "#002600",
-                  {}
-                ],
-                "PA 582": [
-                  "PA 582 (14)",
-                  4500,
-                  "#002600",
-                  {}
-                ],
-                "PA 585": [
-                  "PA 585 (12)",
-                  3900,
-                  "#002600",
-                  {}
-                ],
-                "PA 590": [
-                  "PA 590 (14)",
-                  4500,
-                  "#002600",
-                  {}
-                ]
-              }
-            ],
-            "NR Core": [
-              "NR Core",
-              4500,
-              "#cb9999",
-              {
-                "PA 565": [
-                  "PA 565 (14)",
-                  4500,
-                  "#002600",
-                  {}
-                ]
-              }
-            ]
-          }
-        ],
-        "Electives": [
-          "(NR) Electives",
-          61803,
-          "#6f3700",
-          {
-            "MPA Skill": [
-              "MPA Skill",
-              14400,
-              "#8b4500",
-              {
-                "PA 525": [
-                  "PA 525 (6)",
-                  2100,
-                  "#008000",
-                  {}
-                ],
-                "PA 536": [
-                  "PA 536 (4)",
-                  1500,
-                  "#66b266",
-                  {}
-                ],
-                "PA 545": [
-                  "PA 545 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 549": [
-                  "PA 549 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 550": [
-                  "PA 550 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 554": [
-                  "PA 554 (4)",
-                  1500,
-                  "#66b266",
-                  {}
-                ],
-                "PA 555": [
-                  "PA 555 (10)",
-                  3300,
-                  "#002600",
-                  {}
-                ],
-                "PA 556": [
-                  "PA 556 (5)",
-                  1800,
-                  "#4ca64c",
-                  {}
-                ],
-                "PA 557": [
-                  "PA 557 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 558": [
-                  "PA 558 (6)",
-                  2100,
-                  "#008000",
-                  {}
-                ],
-                "PA 562": [
-                  "PA 562 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ]
-              }
-            ],
-            "NR Skill": [
-              "NR Skill",
-              6000,
-              "#a26a32",
-              {
-                "PA 514": [
-                  "PA 514 (2)",
-                  900,
-                  "#99cc99",
-                  {}
-                ],
-                "PA 519": [
-                  "PA 519 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 543": [
-                  "PA 543 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 548": [
-                  "PA 548 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "EC 522": [
-                  "EC 522 (2)",
-                  900,
-                  "#99cc99",
-                  {}
-                ],
-                "ESM 588": [
-                  "ESM 588 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "SOC 588": [
-                  "SOC 588 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "USP 543": [
-                  "USP 543 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "USP 584": [
-                  "USP 584 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "USP 588": [
-                  "USP 588 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "USP 591": [
-                  "USP 591 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "USP 592": [
-                  "USP 592 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ]
-              }
-            ],
-            "NR Electives": [
-              "NR Electives",
-              16500,
-              "#b98f66",
-              {
-                "PA 539": [
-                  "PA 539 (4)",
-                  1500,
-                  "#66b266",
-                  {}
-                ],
-                "PA 542": [
-                  "PA 542 (3)",
-                  1200,
-                  "#7fbf7f",
-                  {}
-                ],
-                "PA 553": [
-                  "PA 553 (7)",
-                  2400,
-                  "#004c00",
-                  {}
-                ],
-                "PA 564": [
-                  "PA 564 (2)",
-                  900,
-                  "#99cc99",
-                  {}
-                ],
-                "PA 566": [
-                  "PA 566 (8)",
-                  2700,
-                  "#004c00",
-                  {}
-                ],
-                "PA 567": [
-                  "PA 567 (4)",
-                  1500,
-                  "#66b266",
-                  {}
-                ],
-                "PA 568": [
-                  "PA 568 (9)",
-                  3000,
-                  "#003300",
-                  {}
-                ],
-                "PA 569": [
-                  "PA 569 (6)",
-                  2100,
-                  "#008000",
-                  {}
-                ],
-                "USP 571": [
-                  "USP 571 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "EC 532": [
-                  "EC 532 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "EC 533": [
-                  "EC 533 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ]
-              }
-            ],
-            "NR Substitutions": [
-              "NR Substitutes",
-              24903,
-              "#d0b499",
-              {
-                "PA 505": [
-                  "PA 505 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 507": [
-                  "PA 507 (2)",
-                  900,
-                  "#99cc99",
-                  {}
-                ],
-                "PA 510": [
-                  "PA 510 (22)",
-                  6900,
-                  "#002600",
-                  {}
-                ],
-                "PA 515": [
-                  "PA 515 (3)",
-                  1200,
-                  "#7fbf7f",
-                  {}
-                ],
-                "PA 520": [
-                  "PA 520 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 522": [
-                  "PA 522 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 524": [
-                  "PA 524 (2)",
-                  900,
-                  "#99cc99",
-                  {}
-                ],
-                "PA 541": [
-                  "PA 541 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 546": [
-                  "PA 546 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 560": [
-                  "PA 560 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 561": [
-                  "PA 561 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 563": [
-                  "PA 563 (2)",
-                  900,
-                  "#99cc99",
-                  {}
-                ],
-                "PA 570": [
-                  "PA 570 (2)",
-                  900,
-                  "#99cc99",
-                  {}
-                ],
-                "PA 583": [
-                  "PA 583 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 593": [
-                  "PA 593 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 595": [
-                  "PA 595 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "EC 537": [
-                  "EC 537 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "ELP 517": [
-                  "ELP 517 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "ELP 548": [
-                  "ELP 548 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "ELP 588": [
-                  "ELP 588 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "ESM 528": [
-                  "ESM 528 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "ESM 529": [
-                  "ESM 529 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "ESM 588": [
-                  "ESM 588 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PHL 505": [
-                  "PHL 505 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "USP 518": [
-                  "USP 518 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "USP 531": [
-                  "USP 531 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "USP 569": [
-                  "USP 569 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "USP 590": [
-                  "USP 590 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ],
-    "NP Mgmt": [
-      "NP",
-      72005,
-      "#792828",
-      {
-        "Core": [
-          "(NP) Core",
-          44700,
-          "#983232",
-          {
-            "MPA Core": [
-              "MPA Core",
-              32700,
-              "#b26666",
-              {
-                "PA 511": [
-                  "PA 511 (10)",
-                  3300,
-                  "#002600",
-                  {}
-                ],
-                "PA 513": [
-                  "PA 513 (10)",
-                  3300,
-                  "#002600",
-                  {}
-                ],
-                "PA 533": [
-                  "PA 533 (10)",
-                  3300,
-                  "#002600",
-                  {}
-                ],
-                "PA 534": [
-                  "PA 534 (9)",
-                  3000,
-                  "#002600",
-                  {}
-                ],
-                "PA 540": [
-                  "PA 540 (10)",
-                  3300,
-                  "#002600",
-                  {}
-                ],
-                "PA 551": [
-                  "PA 551 (10)",
-                  3300,
-                  "#002600",
-                  {}
-                ],
-                "PA 552": [
-                  "PA 552 (10)",
-                  3300,
-                  "#002600",
-                  {}
-                ],
-                "PA 582": [
-                  "PA 582 (10)",
-                  3300,
-                  "#002600",
-                  {}
-                ],
-                "PA 585": [
-                  "PA 585 (10)",
-                  3300,
-                  "#002600",
-                  {}
-                ],
-                "PA 590": [
-                  "PA 590 (10)",
-                  3300,
-                  "#002600",
-                  {}
-                ]
-              }
-            ],
-            "NP Core": [
-              "NP Core",
-              12000,
-              "#cb9999",
-              {
-                "PA 520": [
-                  "PA 520 (9)",
-                  3000,
-                  "#003300",
-                  {}
-                ],
-                "PA 521": [
-                  "PA 521 (10)",
-                  3300,
-                  "#002600",
-                  {}
-                ],
-                "PA 522": [
-                  "PA 522 (10)",
-                  3300,
-                  "#002600",
-                  {}
-                ],
-                "PA 524": [
-                  "PA 524 (7)",
-                  2400,
-                  "#004c00",
-                  {}
-                ]
-              }
-            ]
-          }
-        ],
-        "Electives": [
-          "(NP) Electives",
-          27302,
-          "#6f3700",
-          {
-            "MPA Skill": [
-              "MPA Skill",
-              9000,
-              "#8b4500",
-              {
-                "PA 525": [
-                  "PA 525 (6)",
-                  2100,
-                  "#008000",
-                  {}
-                ],
-                "PA 536": [
-                  "PA 536 (3)",
-                  1200,
-                  "#7fbf7f",
-                  {}
-                ],
-                "PA 545": [
-                  "PA 545 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 549": [
-                  "PA 549 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 550": [
-                  "PA 550 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 554": [
-                  "PA 554 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 555": [
-                  "PA 555 (4)",
-                  1500,
-                  "#66b266",
-                  {}
-                ],
-                "PA 556": [
-                  "PA 556 (2)",
-                  900,
-                  "#99cc99",
-                  {}
-                ],
-                "PA 557": [
-                  "PA 557 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 558": [
-                  "PA 558 (3)",
-                  1200,
-                  "#7fbf7f",
-                  {}
-                ],
-                "PA 562": [
-                  "PA 562 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ]
-              }
-            ],
-            "NP Skill": [
-              "NP Skill",
-              6600,
-              "#a26a32",
-              {
-                "PA 514": [
-                  "PA 514 (3)",
-                  1200,
-                  "#7fbf7f",
-                  {}
-                ],
-                "PA 525": [
-                  "PA 525 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 526": [
-                  "PA 526 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 536": [
-                  "PA 536 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 543": [
-                  "PA 543 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 545": [
-                  "PA 545 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 549": [
-                  "PA 549 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 555 ": [
-                  "PA 555 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 556": [
-                  "PA 556 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 581": [
-                  "PA 581 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 592": [
-                  "PA 592 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 598": [
-                  "PA 598 (6)",
-                  2100,
-                  "#008000",
-                  {}
-                ]
-              }
-            ],
-            "NP Electives": [
-              "NP Electives",
-              4500,
-              "#b98f66",
-              {
-                "PA 523": [
-                  "PA 523 (3)",
-                  1200,
-                  "#7fbf7f",
-                  {}
-                ],
-                "PA 527": [
-                  "PA 527 (0)",
-                  300,
-                  "#e5f2e5",
-                  {}
-                ],
-                "PA 528": [
-                  "PA 528 (2)",
-                  900,
-                  "#99cc99",
-                  {}
-                ],
-                "PA 529": [
-                  "PA 529 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 538": [
-                  "PA 538 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 541": [
-                  "PA 541 (2)",
-                  900,
-                  "#99cc99",
-                  {}
-                ]
-              }
-            ],
-            "NP Substitutions": [
-              "NP Substitutes",
-              7202,
-              "#d0b499",
-              {
-                "PA 504": [
-                  "PA 504 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 510": [
-                  "PA 510 (5)",
-                  1800,
-                  "#4ca64c",
-                  {}
-                ],
-                "PA 517": [
-                  "PA 517 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 542": [
-                  "PA 542 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 560": [
-                  "PA 560 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 561": [
-                  "PA 561 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 585": [
-                  "PA 585 (1)",
-                  600,
-                  "#cce5cc",
-                  {}
-                ],
-                "PA 593": [
-                  "PA 593 (2)",
-                  900,
-                  "#99cc99",
-                  {}
-                ],
-                "PA 594": [
-                  "PA 594 (2)",
-                  900,
-                  "#99cc99",
-                  {}
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  }
-]
-;
-    
-function init_plots()
-{
-    init_code_hierarchy_plot("code_hierarchy",code_hierarchy_data);
-};
+		var width = plot.offsetWidth;
+		var height = width;
+		var x_margin = 40;
+		var radius = width/7;
+		var y_margin = 40;
+		var content = d3.select("#annotation"); // To display course titles on mouse hover
+	   
+		var max_depth=3;
+		
+		var data_slices = [];
+		var max_level = 4;
+		var color = d3.scale.category20c();
 
-// http://www.w3.org/WAI/ER/WD-AERT/#color-contrast
-function brightness(rgb) {
-  return rgb.r * .299 + rgb.g * .587 + rgb.b * .114;
-}
+		var svg = d3.select("#"+element_id).append("svg")
+			.attr("width", width)
+			.attr("height", height)
+			.append("g")
+			.attr("transform", "translate(" + width / 2 + "," + height * .52 + ")");
+		  
+		function process_data(data,level,start_deg,stop_deg)
+		{
+			var name = data[0];
+			var total = data[1]; //JM: I think this is my sizing element... "total"
+			var children = data[children_index];
+			var current_deg = start_deg;
+			var parent = '';
 
- init_plots();
+			if (level > max_level)
+			{
+				return;
+			}
+			if (start_deg == stop_deg)
+			{
+				return;
+			}
+			
+			
+			data_slices.push([start_deg,stop_deg,name,level,data[1],data[2]]);
+			
+			for (var key in children)
+			{
+				child = children[key];
+				
+				var inc_deg = (stop_deg-start_deg)/total*child[count_index];
+				var child_start_deg = current_deg;
+				
+				current_deg+=inc_deg;
+				
+				var child_stop_deg = current_deg;
+				var span_deg = child_stop_deg-child_start_deg;
+				
+				// JM: Recursing?
+				process_data(child,level+1,child_start_deg,child_stop_deg);
+			}
+		}
+		
+		process_data(data,0,0,360./180.0*Math.PI);
+
+		var ref = data_slices[0];
+		var next_ref = ref;
+		var last_refs = [];
+
+		var thickness = width/2.0/(max_level+2)*1.1;
+			
+		var arc = d3.svg.arc()
+		.startAngle(function(d) { if(d[children_index]==0){return d[0];}return d[0]+0.01; })
+		.endAngle(function(d) { if(d[children_index]==0){return d[1];}return d[1]-0.01; })
+		.innerRadius(function(d) { return 1.1*d[children_index]*thickness; })
+		.outerRadius(function(d) { return (1.1*d[children_index]+1)*thickness; });    
+		
+		var slices = svg.selectAll(".form-container")
+			.data(function(d) { return data_slices; })
+			.enter()
+			.append("g")
+			.classed('form-container', true);
+			
+		slices.append("path")
+			.attr("d", arc)
+			.attr("id",function(d,i){return d[2]+""+i;})
+			.style("fill", function(d) { return color(d[2]);}) // JM: leaving this in to get some default colors
+			.style("fill", function(d) { return d[color_index];}) // JM: overriding the fill color with value from the JSON
+														// JM: FYI: d[3] is the level or depth of the datum
+			.on("click",animate)
+			.on("mouseover", mouseover) // JM: for hover
+			.on("mouseout", mouseout)   // JM: for hover     
+			.attr("class","form")
+			.append("svg:title")
+			.text(function(d) { return Math.round(d[0]*100)/100 +" , "+ Math.round(d[1]*100)/100; });
+
+		function getAngle(d) {
+			var thetaDeg = (180 / Math.PI * (arc.startAngle()(d) + arc.endAngle()(d)) / 2 - 90);
+			return (thetaDeg > 90) ? thetaDeg - 180 : thetaDeg;
+		}
+		
+		slices.append("text")
+			.classed('label', true)
+			.style("font-size", "16px")
+			.attr("x", function(d) { return d[1]; })
+			.attr("text-anchor", "middle")
+			.style("fill", function(d) { // White text for dark backgrounds; dark text for light backgrounds
+				return brightness(d3.rgb(d[color_index])) < 125 ? "#eee" : "#000"; // #000 is black
+			})
+			.attr("transform", function(d) { 
+				return "translate(" + arc.centroid(d) + ")" + 
+					   "rotate("    + getAngle(d) +     ")"; })
+			.attr("dx", "6") // margin
+			.attr("dy", ".35em") // vertical-align
+			.text(function(d){return d[2]})
+			.attr("pointer-events","none");
+
+		function get_start_angle(d,ref)
+		{
+			if (ref)
+			{
+				var ref_span = ref[1]-ref[0];
+				return (d[0]-ref[0])/ref_span*Math.PI*2.0
+			}
+			else
+			{
+				return d[0];
+			}
+		}
+		
+		function get_stop_angle(d,ref)
+		{
+			if (ref)
+			{
+				var ref_span = ref[1]-ref[0];
+				return (d[1]-ref[0])/ref_span*Math.PI*2.0
+			}
+			else
+			{
+				return d[0];
+			}
+		}
+		
+		function get_level(d,ref)
+		{
+			if (ref)
+			{
+				return d[children_index]-ref[children_index];
+			}
+			else
+			{
+				return d[children_index];
+			}
+		}
+		
+		function change_ref(data_point, reference_point) {
+			return [
+				get_start_angle(data_point, reference_point),
+				get_stop_angle (data_point, reference_point),
+				data_point[2],
+				get_level      (data_point, reference_point)
+			];
+		}
+		
+		function rebaseTween(new_ref)
+		{
+			return function(d)
+			{
+				var level = d3.interpolate(get_level(d,ref),get_level(d,new_ref));
+				var start_deg = d3.interpolate(get_start_angle(d,ref),get_start_angle(d,new_ref));
+				var stop_deg = d3.interpolate(get_stop_angle(d,ref),get_stop_angle(d,new_ref));
+				var opacity = d3.interpolate(100,0);
+				return function(t)
+				{
+					return arc([start_deg(t),stop_deg(t),d[2],level(t)]);
+				}
+			}
+		}
+		
+		 //JM: mouseover function which will send the values to the legend
+		 // Not yet working
+		function mouseover(d)
+		{
+			content.append("p")
+			.attr("id", "annotate")
+	//        .text(d.title ? d.name + ": " + d.title : ' ')
+			.text(function(d){return d[2]})
+		}
+
+		//JM: mouseout function which removes the values and replaces them with a blank space
+		// Not yet working
+		function mouseout(d)
+		{
+			content.html(' ');
+		}
+
+		
+		var animating = false;
+		
+		function animate(d) 
+		{
+			d3.select(this).classed('active',true).classed('hovered',false); 
+			if (animating)
+			{
+				return;
+			}
+			animating = true;
+			var revert = false;
+			var new_ref;
+			if (d == ref && last_refs.length > 0)
+			{
+				revert = true;
+				last_ref = last_refs.pop();
+			}
+			if (revert)
+			{
+				d = last_ref;
+				new_ref = ref;
+				svg.selectAll(".form-container")
+				.filter(
+					function (b)
+					{
+						if (b[0] >= last_ref[0] && b[1] <= last_ref[1]  && b[children_index] >= last_ref[children_index])
+						{
+							return true;
+						}
+						return false;
+					}
+				)
+				.transition().duration(1000).style("opacity","1").attr("pointer-events","all");
+			}
+			else
+			{
+				new_ref = d;
+				svg.selectAll(".form-container")
+				.filter(
+					function (b)
+					{
+						if (b[0] < d[0] || b[1] > d[1] || b[children_index] < d[children_index])
+						{
+							return true;
+						}
+						return false;
+					}
+				)
+				.transition().duration(1000).style("opacity","0").attr("pointer-events","none");
+			}
+			svg.selectAll(".form")
+			.filter(
+				function (b)
+				{
+					if (b[0] >= new_ref[0] && b[1] <= new_ref[1] && b[children_index] >= new_ref[children_index])
+					{
+						return true;
+					}
+					return false;
+				}
+			)
+			.transition().duration(1000).attrTween("d",rebaseTween(d));
+			
+			svg.selectAll('.label')
+			.filter(
+				function (b)
+				{
+					return b[0] >= new_ref[0] && b[1] <= new_ref[1] && b[children_index] >= new_ref[3];
+				}
+			).transition().duration(1000)
+			 .attr("transform", function(b) {
+				 var b_prime = change_ref(b, d);
+				 return "translate(" + arc.centroid(b_prime) + ")" + 
+						"rotate("    + getAngle(b_prime) +     ")"; 
+			 })
+						 
+			setTimeout(function(){
+				animating = false;
+				if (! revert)
+				{
+					last_refs.push(ref);
+					ref = d;
+				}
+				else
+				{
+					ref = d;
+				}
+				},1000);
+		};  
+
+	}
+
+	
+	function init_plots()
+	{
+		init_code_hierarchy_plot("code_hierarchy",myJSON);
+	};
+
+	// http://www.w3.org/WAI/ER/WD-AERT/#color-contrast
+	function brightness(rgb) {
+	  return rgb.r * .299 + rgb.g * .587 + rgb.b * .114;
+	}
+
+	 init_plots();
+	});
 });
+
 </script>
  <img src="GL-Course-Utilization.jpg" alt="GL Course Utilization" align="middle"> 
  <img src="LG-Course-Utilization.jpg" alt="GL Course Utilization" align="middle"> 
@@ -2478,4 +428,5 @@ function brightness(rgb) {
  <img src="NR-Course-Utilization.jpg" alt="NR Course Utilization" align="middle"> 
  <img src="NP-Course-Utilization.jpg" alt="GL Course Utilization" align="middle"> 
 
-</body>
+
+ </body>
