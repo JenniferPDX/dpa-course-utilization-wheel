@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+        <title>DPA, Student Course Utilization</title>
+        <meta name="description" content="A visualisation of PSU, Department of Public Admin.">
+    <link rel="stylesheet" type="text/css" href="mystyle.css">
+
+    <!-- Styling overrides -->
+    <style> 
+    </style>
+
+</head>
+
+<body>
+
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script type="text/javascript" src="wheel.js"></script>
+
+    <h2>Course Utilization by Specialization</h2>
+    <p>Student sample size: NR: 16; GL: 10; LG: 10; NP: 10; HR: 7</p>
+
+    <script> executeWheel("dpa-course-utilization-wheel-standardized.json", "=", 1040, 1); </script>
+
+</body>
+</html>
