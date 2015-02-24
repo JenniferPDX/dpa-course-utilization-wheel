@@ -1,19 +1,19 @@
 [
   {
     "name": "MPA",
-    "colour": "#481818",
+    "colour": "#792828",
     "children": [
       {
         "name": "Global=Leadershp",
-        "colour": "#792828",
+        "colour": "#983232",
         "children": [
           {
             "name": "(GL) Core",
-            "colour": "#983232",
+            "colour": "#b26666",
             "children": [
               {
                 "name": "MPA Core",
-                "colour": "#b26666",
+                "colour": "#cb9999",
                 "children": [
                   {
                     "name": "PA 511 (10)",
@@ -78,7 +78,7 @@
               },
               {
                 "name": "GL=Core",
-                "colour": "#cb9999",
+                "colour": "#E6CECE",
                 "children": [
                   {
                     "name": "PA 514 (9)",
@@ -376,15 +376,15 @@
       },
       {
         "name": "Local=Gov",
-        "colour": "#792828",
+        "colour": "#983232",
         "children": [
           {
             "name": "(LG) Core",
-            "colour": "#983232",
+            "colour": "#b26666",
             "children": [
               {
                 "name": "MPA Core",
-                "colour": "#b26666",
+                "colour": "#cb9999",
                 "children": [
                   {
                     "name": "PA 511 (10)",
@@ -450,7 +450,7 @@
               },
               {
                 "name": "LG Core",
-                "colour": "#cb9999",
+                "colour": "#E6CECE",
                 "children": [
                   {
                     "name": "PA 560 (7)",
@@ -808,15 +808,15 @@
       },
       {
         "name": "Human=Resources",
-        "colour": "#792828",
+        "colour": "#983232",
         "children": [
           {
             "name": "(HR) Core",
-            "colour": "#983232",
+            "colour": "#b26666",
             "children": [
               {
                 "name": "MPA Core",
-                "colour": "#b26666",
+                "colour": "#cb9999",
                 "children": [
                   {
                     "name": "PA 511 (7)",
@@ -882,7 +882,7 @@
               },
               {
                 "name": "HR Core",
-                "colour": "#cb9999",
+                "colour": "#E6CECE",
                 "children": [
                   {
                     "name": "PA 510 (6)",
@@ -1150,15 +1150,15 @@
       },
       {
         "name": "Natural=Resources",
-        "colour": "#792828",
+        "colour": "#983232",
         "children": [
           {
             "name": "(NR) Core",
-            "colour": "#983232",
+            "colour": "#b26666",
             "children": [
               {
                 "name": "MPA Core",
-                "colour": "#b26666",
+                "colour": "#cb9999",
                 "children": [
                   {
                     "name": "PA 511 (16)",
@@ -1224,7 +1224,7 @@
               },
               {
                 "name": "NR Core",
-                "colour": "#cb9999",
+                "colour": "#E6CECE",
                 "children": [
                   {
                     "name": "PA 565 (14)",
@@ -1642,15 +1642,15 @@
       },
       {
         "name": "Non=Profit",
-        "colour": "#792828",
+        "colour": "#983232",
         "children": [
           {
             "name": "(NP) Core",
-            "colour": "#983232",
+            "colour": "#b26666",
             "children": [
               {
                 "name": "MPA Core",
-                "colour": "#b26666",
+                "colour": "#cb9999",
                 "children": [
                   {
                     "name": "PA 511 (10)",
@@ -1716,7 +1716,7 @@
               },
               {
                 "name": "NP Core",
-                "colour": "#cb9999",
+                "colour": "#E6CECE",
                 "children": [
                   {
                     "name": "PA 520 (9)",
