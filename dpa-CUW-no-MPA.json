@@ -1,5 +1,377 @@
 [
   {
+    "name": "Global=Leadershp",
+    "colour": "#983232",
+    "children": [
+      {
+        "name": "(GL) Core",
+        "colour": "#b26666",
+        "children": [
+          {
+            "name": "MPA Core",
+            "colour": "#cb9999",
+            "children": [
+              {
+                "name": "PA 511 (10)",
+                "title": "PUBLIC ADMINISTRATION",
+                "size": 11,
+                "colour": "#002600"
+              },
+              {
+                "name": "PA 513 (10)",
+                "title": "ADMIN ETHICS-VALUE",
+                "size": 11,
+                "colour": "#002600"
+              },
+              {
+                "name": "PA 533 (10)",
+                "title": "PUBLIC POLICY ORIGIN & PROCESS",
+                "size": 11,
+                "colour": "#002600"
+              },
+              {
+                "name": "PA 534 (10)",
+                "title": "ADMINISTRATIVE LAW / POLICY",
+                "size": 11,
+                "colour": "#002600"
+              },
+              {
+                "name": "PA 540 (10)",
+                "title": "ADMINISTRATIVE THEORY-BEHAV",
+                "size": 11,
+                "colour": "#002600"
+              },
+              {
+                "name": "PA 551 (10)",
+                "title": "ANALYTIC METH PA I",
+                "size": 11,
+                "colour": "#002600"
+              },
+              {
+                "name": "PA 552 (10)",
+                "title": "ANALYTIC METH PA II",
+                "size": 11,
+                "colour": "#002600"
+              },
+              {
+                "name": "PA 582 (10)",
+                "title": "PUBLIC BUDGETING",
+                "size": 11,
+                "colour": "#002600"
+              },
+              {
+                "name": "PA 585 (10)",
+                "title": "FINANCIAL MGMT PUBLIC SECTOR",
+                "size": 11,
+                "colour": "#002600"
+              },
+              {
+                "name": "PA 590 (10)",
+                "title": "PUBLIC HR MANAGEMENT",
+                "size": 11,
+                "colour": "#002600"
+              }
+            ]
+          },
+          {
+            "name": "GL=Core",
+            "colour": "#E6CECE",
+            "children": [
+              {
+                "name": "PA 514 (9)",
+                "title": "GLOBAL LEADERSHIP & MGMT",
+                "size": 10,
+                "colour": "#003300"
+              },
+              {
+                "name": "PA 542 (8)",
+                "title": "SUSTAINABLE DVLP IMPLMNTN",
+                "size": 9,
+                "colour": "#004c00"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "(GL)=Electives",
+        "colour": "#6f3700",
+        "children": [
+          {
+            "name": "MPA=Skill",
+            "colour": "#8b4500",
+            "children": [
+              {
+                "name": "PA 525 (6)",
+                "title": "GRANTWRITING FOR NONPROFITS",
+                "size": 7,
+                "colour": "#008000"
+              },
+              {
+                "name": "PA 536 (2)",
+                "title": "STRATEGIC PLANNING",
+                "size": 3,
+                "colour": "#99cc99"
+              },
+              {
+                "name": "PA 545 (0)",
+                "title": "ORGANIZATIONAL DEVELOPMENT",
+                "size": 1,
+                "colour": "#e5f2e5"
+              },
+              {
+                "name": "PA 549 (4)",
+                "title": "CROSSCULT COMM/PUBL",
+                "size": 5,
+                "colour": "#66b266"
+              },
+              {
+                "name": "PA 550 (0)",
+                "title": "MANAGING INFO RES",
+                "size": 1,
+                "colour": "#e5f2e5"
+              },
+              {
+                "name": "PA 554 (3)",
+                "title": "POLICY ANALYSIS RES",
+                "size": 4,
+                "colour": "#7fbf7f"
+              },
+              {
+                "name": "PA 555 (3)",
+                "title": "PROGRAM EVAL-MGMT",
+                "size": 4,
+                "colour": "#7fbf7f"
+              },
+              {
+                "name": "PA 556 (1)",
+                "title": "PUBLIC CONTRACT MANAGEMENT",
+                "size": 2,
+                "colour": "#cce5cc"
+              },
+              {
+                "name": "PA 557 (0)",
+                "title": "PUBLIC CONTRACT MANAGEMENT",
+                "size": 1,
+                "colour": "#e5f2e5"
+              },
+              {
+                "name": "PA 558 (5)",
+                "title": "MANAGING PUBLIC PROJECTS",
+                "size": 6,
+                "colour": "#4ca64c"
+              },
+              {
+                "name": "PA 562 (0)",
+                "title": "MANAGING EMPL PERF PUBLC SECTR",
+                "size": 1,
+                "colour": "#e5f2e5"
+              }
+            ]
+          },
+          {
+            "name": "GL Skill",
+            "colour": "#a26a32",
+            "children": [
+              {
+                "name": "PA 517 (0)",
+                "title": "LDRSHP DEV FOR PUB SECTOR",
+                "size": 1,
+                "colour": "#e5f2e5"
+              },
+              {
+                "name": "PA 525 (0)",
+                "title": "GRANTWRITING FOR NONPROFITS",
+                "size": 1,
+                "colour": "#e5f2e5"
+              },
+              {
+                "name": "PA 536 (0)",
+                "title": "STRATEGIC PLANNING",
+                "size": 1,
+                "colour": "#e5f2e5"
+              },
+              {
+                "name": "PA 543 (1)",
+                "title": "CREATING COLLAB COMMUNITIES",
+                "size": 2,
+                "colour": "#cce5cc"
+              },
+              {
+                "name": "PA 545 (0)",
+                "title": "ORGANIZATIONAL DEVELOPMENT",
+                "size": 1,
+                "colour": "#e5f2e5"
+              },
+              {
+                "name": "PA 553 (1)",
+                "title": "SUST DEV - POLICY & GOVERNANCE",
+                "size": 2,
+                "colour": "#cce5cc"
+              },
+              {
+                "name": "PA 554 (0)",
+                "title": "POLICY ANALYSIS RES",
+                "size": 1,
+                "colour": "#e5f2e5"
+              },
+              {
+                "name": "PA 555 (0)",
+                "title": "PROGRAM EVAL-MGMT",
+                "size": 1,
+                "colour": "#e5f2e5"
+              }
+            ]
+          },
+          {
+            "name": "GL Elect",
+            "colour": "#b98f66",
+            "children": [
+              {
+                "name": "PA 510 (10)",
+                "title": "Special Topics",
+                "size": 11,
+                "colour": "#002600"
+              },
+              {
+                "name": "PA 523 (1)",
+                "title": "NGOS-NONPROFIT ON  WORLD STAGE",
+                "size": 2,
+                "colour": "#cce5cc"
+              },
+              {
+                "name": "PA 529 (1)",
+                "title": "OAXACA FIELD STUDY",
+                "size": 2,
+                "colour": "#cce5cc"
+              },
+              {
+                "name": "PA 549 (0)",
+                "title": "CROSSCULT COMM/PUBL",
+                "size": 1,
+                "colour": "#e5f2e5"
+              },
+              {
+                "name": "PA 550 (0)",
+                "title": "MANAGING INFO RES",
+                "size": 1,
+                "colour": "#e5f2e5"
+              },
+              {
+                "name": "PA 558 (0)",
+                "title": "MANAGING PUBLIC PROJECTS",
+                "size": 1,
+                "colour": "#e5f2e5"
+              },
+              {
+                "name": "PA 565 (2)",
+                "title": "NATL RESRC POL/ADMIN",
+                "size": 3,
+                "colour": "#99cc99"
+              }
+            ]
+          },
+          {
+            "name": "GL=Substitutes",
+            "colour": "#d0b499",
+            "children": [
+              {
+                "name": "PA 515 (2)",
+                "title": "PUBLIC WORKS ADMIN",
+                "size": 3,
+                "colour": "#99cc99"
+              },
+              {
+                "name": "PA 516 (2)",
+                "title": "CURRENT ISSUES IN PUBLIC MGMT",
+                "size": 3,
+                "colour": "#99cc99"
+              },
+              {
+                "name": "PA 520 (1)",
+                "title": "INTRO NON-PROFIT MGMT",
+                "size": 2,
+                "colour": "#cce5cc"
+              },
+              {
+                "name": "PA 539 (2)",
+                "title": "NATL POLICY PROCESS",
+                "size": 3,
+                "colour": "#99cc99"
+              },
+              {
+                "name": "PA 547 (1)",
+                "title": "SUPERVSN/PUBLIC SECT",
+                "size": 2,
+                "colour": "#cce5cc"
+              },
+              {
+                "name": "PA 548 (1)",
+                "title": "SUPERVSN/PUBLIC SECT",
+                "size": 2,
+                "colour": "#cce5cc"
+              },
+              {
+                "name": "PA 560 (1)",
+                "title": "LOCAL GOVERNMENT ADMINISTRATION",
+                "size": 2,
+                "colour": "#cce5cc"
+              },
+              {
+                "name": "PA 566 (1)",
+                "title": "WATER POLICY & ADMIN",
+                "size": 2,
+                "colour": "#cce5cc"
+              },
+              {
+                "name": "PA 567 (1)",
+                "title": "ENERGY RESOURCES POL & ADMIN",
+                "size": 2,
+                "colour": "#cce5cc"
+              },
+              {
+                "name": "PA 568 (1)",
+                "title": "FOREST POLICY AND ADMINISTRATION",
+                "size": 2,
+                "colour": "#cce5cc"
+              },
+              {
+                "name": "PA 569 (1)",
+                "title": "FISH AND WILDLIFE POLICY AND ADMINISTRATION",
+                "size": 2,
+                "colour": "#cce5cc"
+              },
+              {
+                "name": "PA 594 (2)",
+                "title": "ENHNCNG DIVERSITY IN WORKPLACE",
+                "size": 3,
+                "colour": "#cce5cc"
+              },
+              {
+                "name": "PA 598 (1)",
+                "title": "VALUES BASED MGMT: NPRFT HR",
+                "size": 2,
+                "colour": "#cce5cc"
+              },
+              {
+                "name": "EC 590 (1)",
+                "title": "",
+                "size": 2,
+                "colour": "#cce5cc"
+              },
+              {
+                "name": "USP 615 (1)",
+                "title": "",
+                "size": 2,
+                "colour": "#cce5cc"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
     "name": "Local=Gov",
     "colour": "#983232",
     "children": [
@@ -432,6 +804,348 @@
     ]
   },
   {
+    "name": "Health=Admin",
+    "colour": "#983232",
+    "children": [
+      {
+        "name": "(HA) Core",
+        "colour": "#b26666",
+        "children": [
+          {
+            "name": "MPA Core",
+            "colour": "#cb9999",
+            "children": [
+              {
+                "name": "PA 510 (1)",
+                "title": "HEALTH SERV HR MGT",
+                "size": 2,
+                "substitute": 1,
+                "colour": "#cce5cc"
+              },
+              {
+                "name": "PA 511 (9)",
+                "title": "PUBLIC ADMINISTRATION",
+                "size": 10,
+                "colour": "#003300"
+              },
+              {
+                "name": "PA 513 (1)",
+                "title": "ADMIN ETHICS-VALUE",
+                "size": 2,
+                "colour": "#cce5cc"
+              },
+              {
+                "name": "PA 533 (9)",
+                "title": "PUBLIC POLICY ORIGIN & PROCESS",
+                "size": 10,
+                "colour": "#003300"
+              },
+              {
+                "name": "PA 534 (8)",
+                "title": "ADMINISTRATIVE LAW / POLICY",
+                "size": 9,
+                "colour": "#004c00"
+              },
+              {
+                "name": "PA 540 (5)",
+                "title": "ADMINISTRATIVE THEORY-BEHAV",
+                "size": 6,
+                "substitute": 1,
+                "colour": "#4ca64c"
+              },
+              {
+                "name": "PA 551 (9)",
+                "title": "ANALYTIC METH PA I",
+                "size": 10,
+                "colour": "#003300"
+              },
+              {
+                "name": "PA 552 (9)",
+                "title": "ANALYTIC METH PA II",
+                "size": 10,
+                "colour": "#003300"
+              },
+              {
+                "name": "PA 580 (0)",
+                "title": "HLTH SRVS HUMAN RES MGMT",
+                "size": 1,
+                "substitute": 1,
+                "colour": "#e5f2e5"
+              },
+              {
+                "name": "PA 582 (9)",
+                "title": "PUBLIC BUDGETING",
+                "size": 10,
+                "colour": "#003300"
+              },
+              {
+                "name": "PA 590 (3)",
+                "title": "PUBLIC HR MANAGEMENT",
+                "size": 4,
+                "colour": "#7fbf7f"
+              }
+            ]
+          },
+          {
+            "name": "HA Core",
+            "colour": "#E6CECE",
+            "children": [
+              {
+                "name": "PAH 541 (5)",
+                "title": "ORG BEHAVIOR HLTH",
+                "size": 6,
+                "colour": "#4ca64c"
+              },
+              {
+                "name": "PAH 570 (9))",
+                "title": "HEALTH ADMIN",
+                "size": 10,
+                "colour": "#003300"
+              },
+              {
+                "name": "PAH 571 (9)",
+                "title": "HEALTH POLICY",
+                "size": 10,
+                "colour": "#003300"
+              },
+              {
+                "name": "PAH 573 (8)",
+                "title": "VALUES & ETHICS-HEALTH",
+                "size": 9,
+                "colour": "#004c00"
+              },
+              {
+                "name": "PAH 574 (1)",
+                "title": "HEALTH SYSTEMS ORG",
+                "size": 2,
+                "colour": "#cce5cc"
+              },
+              {
+                "name": "PAH 577 (1)",
+                "title": "HLTH CARE LAW & REG",
+                "size": 2,
+                "substitute": 1,
+                "colour": "#cce5cc"
+              },
+              {
+                "name": "PAH 580 (5)",
+                "title": "HLTH SRVS HUMAN RES MGMT",
+                "size": 6,
+                "substitute": 1,
+                "colour": "#4ca64c"
+              },
+              {
+                "name": "PAH 586 (9)",
+                "title": "INTRO-HEALTH ECON",
+                "size": 10,
+                "colour": "#003300"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "(HA)=Electives",
+        "colour": "#6f3700",
+        "children": [
+          {
+            "name": "(HA)=Electives",
+            "colour": "#8b4500",
+            "children": [
+              {
+                "name": "PA 504 (1)",
+                "title": "INTERNSHIP",
+                "size": 2,
+                "substitute": 1,
+                "colour": "#cce5cc"
+              },
+              {
+                "name": "PA 525 (1)",
+                "title": "GRANTWRITING FOR NONPROFITS",
+                "size": 2,
+                "colour": "#cce5cc"
+              },
+              {
+                "name": "PA 529 (1)",
+                "title": "OAXACA FIELD STUDY",
+                "size": 2,
+                "substitute": 1,
+                "colour": "#cce5cc"
+              },
+              {
+                "name": "PA 536 (4)",
+                "title": "STRATEGIC PLANNING",
+                "size": 5,
+                "substitute": 1,
+                "colour": "#66b266"
+              },
+              {
+                "name": "PA 544 (1)",
+                "title": "NOT AVAILABLE",
+                "size": 2,
+                "substitute": 1,
+                "colour": "#cce5cc"
+              },
+              {
+                "name": "PA 545 (6)",
+                "title": "ORGANIZATIONAL DEVELOPMENT",
+                "size": 7,
+                "colour": "#008000"
+              },
+              {
+                "name": "PA 547 (1)",
+                "title": "NOT AVAILABLE",
+                "size": 2,
+                "substitute": 1,
+                "colour": "#cce5cc"
+              },
+              {
+                "name": "PA 549 (1)",
+                "title": "CROSSCULT COMM/PUBL",
+                "size": 2,
+                "colour": "#cce5cc"
+              },
+              {
+                "name": "PA 554 (1)",
+                "title": "POLICY ANALYSIS RES",
+                "size": 2,
+                "colour": "#cce5cc"
+              },
+              {
+                "name": "PA 555 (2)",
+                "title": "PROGRAM EVAL-MGMT",
+                "size": 2,
+                "substitute": 1,
+                "colour": "#99cc99"
+              },
+              {
+                "name": "PA 556 (0)",
+                "title": "PUBLIC CONTRACT MANAGEMENT",
+                "size": 1,
+                "colour": "#e5f2e5"
+              },
+              {
+                "name": "PA 558 (0)",
+                "title": "MANAGING PUBLIC PROJECTS",
+                "size": 1,
+                "colour": "#e5f2e5"
+              },
+              {
+                "name": "PA 562 (0)",
+                "title": "MANAGING EMPL PERF PUBLC SECTR",
+                "size": 1,
+                "colour": "#e5f2e5"
+              },
+              {
+                "name": "PA 563 (0)",
+                "title": "CITIZENS & ADMIN",
+                "size": 1,
+                "colour": "#e5f2e5"
+              },
+              {
+                "name": "PAH 510 (1)",
+                "title": "MINORITY HEALTH AND CUL",
+                "size": 2,
+                "substitute": 1,
+                "colour": "#cce5cc"
+              },
+              {
+                "name": "PAH 510 (1)",
+                "title": "HEALTH REFORM-DONE & NEXT",
+                "size": 2,
+                "substitute": 1,
+                "colour": "#cce5cc"
+              },
+              {
+                "name": "PAH 541 (1)",
+                "title": "ORG BEHAV, HLTH SVCS ORGS",
+                "size": 2,
+                "substitute": 1,
+                "colour": "#cce5cc"
+              },
+              {
+                "name": "PAH 542 (1)",
+                "title": "MARKETING HEALTH SERVICES",
+                "size": 2,
+                "substitute": 1,
+                "colour": "#cce5cc"
+              },
+              {
+                "name": "PAH 544 (1)",
+                "title": "LDRSHP & GOV IN HLTH CARE",
+                "size": 2,
+                "colour": "#cce5cc"
+              },
+              {
+                "name": "PAH 572 (2)",
+                "title": "HEALTH POLITICS",
+                "size": 3,
+                "colour": "#99cc99"
+              },
+              {
+                "name": "PAH 574 (6)",
+                "title": "HEALTH SYSTEMS ORGANIZATION",
+                "size": 7,
+                "substitute": 1,
+                "colour": "#008000"
+              },
+              {
+                "name": "PAH 575 (0)",
+                "title": "ADVANCED HEALTH POLICY",
+                "size": 1,
+                "colour": "#e5f2e5"
+              },
+              {
+                "name": "PAH 576 (4)",
+                "title": "STRAT MGMT IN HLTH CARE ORGS",
+                "size": 5,
+                "colour": "#66b266"
+              },
+              {
+                "name": "PAH 577 (2)",
+                "title": "HEALTH CARE LAW AND REGULATION",
+                "size": 3,
+                "substitute": 1,
+                "colour": "#99cc99"
+              },
+              {
+                "name": "PAH 578 (1)",
+                "title": "CONTINUAL IMPROVE IN HLTH CARE",
+                "size": 2,
+                "colour": "#cce5cc"
+              },
+              {
+                "name": "PAH 579 (7)",
+                "title": "HLTH INFO TECH, SYSTEMS MGMT",
+                "size": 8,
+                "colour": "#004c00"
+              },
+              {
+                "name": "PAH 587 (3)",
+                "title": "FIN MGMT-HEALTH SVCS",
+                "size": 4,
+                "colour": "#7fbf7f"
+              },
+              {
+                "name": "PA 588 (3)",
+                "title": "PGM EVAL & MGMT, HLTH SVCS",
+                "size": 4,
+                "colour": "#7fbf7f"
+              },
+              {
+                "name": "PHE 556 (1)",
+                "title": "HLTH ASPCTS OF AGING",
+                "size": 2,
+                "substitute": 1,
+                "colour": "#cce5cc"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
     "name": "Human=Resources",
     "colour": "#983232",
     "children": [
@@ -674,7 +1388,7 @@
             ]
           },
           {
-            "name": "HR=Electives",
+            "name": "HR Elec",
             "colour": "#b98f66",
             "children": [
               {
@@ -710,7 +1424,7 @@
             ]
           },
           {
-            "name": "HR=Substitutes",
+            "name": "HR Subst",
             "colour": "#d0b499",
             "children": [
               {
@@ -1526,7 +2240,7 @@
             ]
           },
           {
-            "name": "NP=Electives",
+            "name": "NP Elect",
             "colour": "#b98f66",
             "children": [
               {
@@ -1568,7 +2282,7 @@
             ]
           },
           {
-            "name": "NP=Substitutes",
+            "name": "NP Subst",
             "colour": "#d0b499",
             "children": [
               {
@@ -1624,377 +2338,6 @@
                 "title": "ENHNCNG DIVERSITY IN WORKPLACE",
                 "size": 3,
                 "colour": "#99cc99"
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "name": "Global=Leadershp",
-    "colour": "#983232",
-    "children": [
-      {
-        "name": "(GL) Core",
-        "colour": "#b26666",
-        "children": [
-          {
-            "name": "MPA Core",
-            "colour": "#cb9999",
-            "children": [
-              {
-                "name": "PA 511 (10)",
-                "title": "PUBLIC ADMINISTRATION",
-                "size": 11,
-                "colour": "#002600"
-              },
-              {
-                "name": "PA 513 (10)",
-                "title": "ADMIN ETHICS-VALUE",
-                "size": 11,
-                "colour": "#002600"
-              },
-              {
-                "name": "PA 533 (10)",
-                "title": "PUBLIC POLICY ORIGIN & PROCESS",
-                "size": 11,
-                "colour": "#002600"
-              },
-              {
-                "name": "PA 534 (10)",
-                "title": "ADMINISTRATIVE LAW / POLICY",
-                "size": 11,
-                "colour": "#002600"
-              },
-              {
-                "name": "PA 540 (10)",
-                "title": "ADMINISTRATIVE THEORY-BEHAV",
-                "size": 11,
-                "colour": "#002600"
-              },
-              {
-                "name": "PA 551 (10)",
-                "size": 11,
-                "colour": "#002600"
-              },
-              {
-                "name": "PA 552 (10)",
-                "title": "ANALYTIC METH PA II",
-                "size": 11,
-                "colour": "#002600"
-              },
-              {
-                "name": "PA 582 (10)",
-                "title": "PUBLIC BUDGETING",
-                "size": 11,
-                "colour": "#002600"
-              },
-              {
-                "name": "PA 585 (10)",
-                "title": "FINANCIAL MGMT PUBLIC SECTOR",
-                "size": 11,
-                "colour": "#002600"
-              },
-              {
-                "name": "PA 590 (10)",
-                "title": "PUBLIC HR MANAGEMENT",
-                "size": 11,
-                "colour": "#002600"
-              }
-            ]
-          },
-          {
-            "name": "GL=Core",
-            "colour": "#E6CECE",
-            "children": [
-              {
-                "name": "PA 514 (9)",
-                "title": "GLOBAL LEADERSHIP & MGMT",
-                "size": 10,
-                "colour": "#003300"
-              },
-              {
-                "name": "PA 542 (8)",
-                "title": "SUSTAINABLE DVLP IMPLMNTN",
-                "size": 9,
-                "colour": "#004c00"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "name": "(GL)=Electives",
-        "colour": "#6f3700",
-        "children": [
-          {
-            "name": "MPA=Skill",
-            "colour": "#8b4500",
-            "children": [
-              {
-                "name": "PA 525 (6)",
-                "title": "GRANTWRITING FOR NONPROFITS",
-                "size": 7,
-                "colour": "#008000"
-              },
-              {
-                "name": "PA 536 (2)",
-                "title": "STRATEGIC PLANNING",
-                "size": 3,
-                "colour": "#99cc99"
-              },
-              {
-                "name": "PA 545 (0)",
-                "title": "ORGANIZATIONAL DEVELOPMENT",
-                "size": 1,
-                "colour": "#e5f2e5"
-              },
-              {
-                "name": "PA 549 (4)",
-                "title": "CROSSCULT COMM/PUBL",
-                "size": 5,
-                "colour": "#66b266"
-              },
-              {
-                "name": "PA 550 (0)",
-                "title": "MANAGING INFO RES",
-                "size": 1,
-                "colour": "#e5f2e5"
-              },
-              {
-                "name": "PA 554 (3)",
-                "title": "POLICY ANALYSIS RES",
-                "size": 4,
-                "colour": "#7fbf7f"
-              },
-              {
-                "name": "PA 555 (3)",
-                "title": "PROGRAM EVAL-MGMT",
-                "size": 4,
-                "colour": "#7fbf7f"
-              },
-              {
-                "name": "PA 556 (1)",
-                "title": "PUBLIC CONTRACT MANAGEMENT",
-                "size": 2,
-                "colour": "#cce5cc"
-              },
-              {
-                "name": "PA 557 (0)",
-                "title": "PUBLIC CONTRACT MANAGEMENT",
-                "size": 1,
-                "colour": "#e5f2e5"
-              },
-              {
-                "name": "PA 558 (5)",
-                "title": "MANAGING PUBLIC PROJECTS",
-                "size": 6,
-                "colour": "#4ca64c"
-              },
-              {
-                "name": "PA 562 (0)",
-                "title": "MANAGING EMPL PERF PUBLC SECTR",
-                "size": 1,
-                "colour": "#e5f2e5"
-              }
-            ]
-          },
-          {
-            "name": "GL Skill",
-            "colour": "#a26a32",
-            "children": [
-              {
-                "name": "PA 517 (0)",
-                "title": "LDRSHP DEV FOR PUB SECTOR",
-                "size": 1,
-                "colour": "#e5f2e5"
-              },
-              {
-                "name": "PA 525 (0)",
-                "title": "GRANTWRITING FOR NONPROFITS",
-                "size": 1,
-                "colour": "#e5f2e5"
-              },
-              {
-                "name": "PA 536 (0)",
-                "title": "STRATEGIC PLANNING",
-                "size": 1,
-                "colour": "#e5f2e5"
-              },
-              {
-                "name": "PA 543 (1)",
-                "title": "CREATING COLLAB COMMUNITIES",
-                "size": 2,
-                "colour": "#cce5cc"
-              },
-              {
-                "name": "PA 545 (0)",
-                "title": "ORGANIZATIONAL DEVELOPMENT",
-                "size": 1,
-                "colour": "#e5f2e5"
-              },
-              {
-                "name": "PA 553 (1)",
-                "title": "SUST DEV - POLICY & GOVERNANCE",
-                "size": 2,
-                "colour": "#cce5cc"
-              },
-              {
-                "name": "PA 554 (0)",
-                "title": "POLICY ANALYSIS RES",
-                "size": 1,
-                "colour": "#e5f2e5"
-              },
-              {
-                "name": "PA 555 (0)",
-                "title": "PROGRAM EVAL-MGMT",
-                "size": 1,
-                "colour": "#e5f2e5"
-              }
-            ]
-          },
-          {
-            "name": "GL=Electives",
-            "colour": "#b98f66",
-            "children": [
-              {
-                "name": "PA 510 (10)",
-                "title": "Special Topics",
-                "size": 11,
-                "colour": "#002600"
-              },
-              {
-                "name": "PA 523 (1)",
-                "title": "NGOS-NONPROFIT ON  WORLD STAGE",
-                "size": 2,
-                "colour": "#cce5cc"
-              },
-              {
-                "name": "PA 529 (1)",
-                "title": "OAXACA FIELD STUDY",
-                "size": 2,
-                "colour": "#cce5cc"
-              },
-              {
-                "name": "PA 549 (0)",
-                "title": "CROSSCULT COMM/PUBL",
-                "size": 1,
-                "colour": "#e5f2e5"
-              },
-              {
-                "name": "PA 550 (0)",
-                "title": "MANAGING INFO RES",
-                "size": 1,
-                "colour": "#e5f2e5"
-              },
-              {
-                "name": "PA 558 (0)",
-                "title": "MANAGING PUBLIC PROJECTS",
-                "size": 1,
-                "colour": "#e5f2e5"
-              },
-              {
-                "name": "PA 565 (2)",
-                "title": "NATL RESRC POL/ADMIN",
-                "size": 3,
-                "colour": "#99cc99"
-              }
-            ]
-          },
-          {
-            "name": "GL=Substitutes",
-            "colour": "#d0b499",
-            "children": [
-              {
-                "name": "PA 515 (2)",
-                "title": "PUBLIC WORKS ADMIN",
-                "size": 3,
-                "colour": "#99cc99"
-              },
-              {
-                "name": "PA 516 (2)",
-                "title": "CURRENT ISSUES IN PUBLIC MGMT",
-                "size": 3,
-                "colour": "#99cc99"
-              },
-              {
-                "name": "PA 520 (1)",
-                "title": "INTRO NON-PROFIT MGMT",
-                "size": 2,
-                "colour": "#cce5cc"
-              },
-              {
-                "name": "PA 539 (2)",
-                "title": "NATL POLICY PROCESS",
-                "size": 3,
-                "colour": "#99cc99"
-              },
-              {
-                "name": "PA 547 (1)",
-                "title": "SUPERVSN/PUBLIC SECT",
-                "size": 2,
-                "colour": "#cce5cc"
-              },
-              {
-                "name": "PA 548 (1)",
-                "title": "SUPERVSN/PUBLIC SECT",
-                "size": 2,
-                "colour": "#cce5cc"
-              },
-              {
-                "name": "PA 560 (1)",
-                "title": "LOCAL GOVERNMENT ADMINISTRATION",
-                "size": 2,
-                "colour": "#cce5cc"
-              },
-              {
-                "name": "PA 566 (1)",
-                "title": "WATER POLICY & ADMIN",
-                "size": 2,
-                "colour": "#cce5cc"
-              },
-              {
-                "name": "PA 567 (1)",
-                "title": "ENERGY RESOURCES POL & ADMIN",
-                "size": 2,
-                "colour": "#cce5cc"
-              },
-              {
-                "name": "PA 568 (1)",
-                "title": "FOREST POLICY AND ADMINISTRATION",
-                "size": 2,
-                "colour": "#cce5cc"
-              },
-              {
-                "name": "PA 569 (1)",
-                "title": "FISH AND WILDLIFE POLICY AND ADMINISTRATION",
-                "size": 2,
-                "colour": "#cce5cc"
-              },
-              {
-                "name": "PA 594 (2)",
-                "title": "ENHNCNG DIVERSITY IN WORKPLACE",
-                "size": 3,
-                "colour": "#cce5cc"
-              },
-              {
-                "name": "PA 598 (1)",
-                "title": "VALUES BASED MGMT: NPRFT HR",
-                "size": 2,
-                "colour": "#cce5cc"
-              },
-              {
-                "name": "EC 590 (1)",
-                "title": "",
-                "size": 2,
-                "colour": "#cce5cc"
-              },
-              {
-                "name": "USP 615 (1)",
-                "title": "",
-                "size": 2,
-                "colour": "#cce5cc"
               }
             ]
           }
