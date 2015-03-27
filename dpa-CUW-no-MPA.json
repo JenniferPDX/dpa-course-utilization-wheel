@@ -1,4 +1,6 @@
-[
+{
+      "name": "Course Utilization",
+      "children": [
   {
     "name": "Global=Leadershp",
     "colour": "#983232",
@@ -2346,3 +2348,4 @@
     ]
   }
 ]
+}
