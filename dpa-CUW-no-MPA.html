@@ -1,13 +1,25 @@
 <!DOCTYPE html>
-<html>
-<head>
-
+<html lang="en">
+  <head>
     <meta charset="utf-8">
-        <title>DPA, Student Course Utilization</title>
-        <meta name="description" content="A visualisation of PSU, Department of Public Admin.">
-    <link rel="stylesheet" type="text/css" href="mystyle.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>DPA, Student Course Utilization</title>
+    <meta name="description" content="A visualisation of PSU, Department of Public Admin.">
 
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="css/mystyle.css">
     <!-- Styling overrides -->
+    <style> 
     <style> 
         path {
           stroke: #FFF;
@@ -21,27 +33,70 @@
             border: 3px solid rgb(0, 38, 0);
             background-color: rgb(0, 38, 0);
         }
-
     </style>
 
-</head>
+    </head>
+  <body>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">PSU Dept of Public Administration</a>
+    </div>
 
-<body>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Wheels <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="dpa-wheel-GL.html">Global Leadership</a></li>
+            <li><a href="dpa-wheel-HA.html">Health Administration</a></li>
+            <li><a href="dpa-wheel-HR.html">Human Resources</a></li>
+            <li><a href="dpa-wheel-LG.html">Local Government</a></li>
+            <li><a href="dpa-wheel-NR.html">Natural Resources</a></li>
+            <li><a href="dpa-wheel-NP.html">Non Profit</a></li>
+            <li class="divider"></li>
+            <li><a href="wheel-courses.html">Department Course Wheel</a></li>
+            <li><a href="wheel-program.html">Program / Specializations Wheel</a></li>
+            <li><a href="dpa-CUW-no-MPA.html">Student Course Utilization Wheel</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Trees <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="dpa-flare-GL.html">Global Leadership</a></li>
+            <li><a href="dpa-flare-HA.html">Health Administration</a></li>
+            <li><a href="dpa-flare-HR.html">Human Resources</a></li>
+            <li><a href="dpa-flare-LG.html">Local Government</a></li>
+            <li><a href="dpa-flare-NR.html">Natural Resources</a></li>
+            <li><a href="dpa-flare-NP.html">Non Profit</a></li>
+          </ul>
+        </li>
+      </ul>
+    <!-- <p class="navbar-text">Other text for the nav bar</p> -->
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
 
     <script src="http://d3js.org/d3.v3.min.js"></script>
-    <script type="text/javascript" src="wheel.js"></script>
+    <script type="text/javascript" src="js/wheel.js"></script>
 
     <h2>Course Utilization by Specialization</h2>
     <p>Student sample size: NR: 16; GL: 10; LG: 10; NP: 10; HR: 7</p>
 
-    <script> executeWheel("dpa-CUW-no-MPA.json", "=", 1040, 1, true);</script>
+    <script> executeWheel("data/dpa-CUW-no-MPA.json", "=", 1040, 1, true);</script>
 
- <img src="GL-Course-Utilization.jpg" alt="Global Leadership Course Utilization"        align="middle"> 
- <img src="HA-Course-Utilization.jpg" alt="Health Administration Course Utilization"    align="middle"> 
- <img src="HR-Course-Utilization.jpg" alt="Human Resources Course Utilization"          align="middle"> 
- <img src="LG-Course-Utilization.jpg" alt="Local Government Course Utilization"         align="middle"> 
- <img src="NR-Course-Utilization.jpg" alt="Natural Resources Course Utilization"        align="middle"> 
- <img src="NP-Course-Utilization.jpg" alt="Non-Profit Course Utilization"               align="middle"> 
-
-</body>
+  </body>
 </html>
